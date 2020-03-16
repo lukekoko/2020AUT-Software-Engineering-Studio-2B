@@ -11,7 +11,9 @@
 * cd into __backend__ folder
 * run `python -m virtualenv venv`
 * activate virtual environment
-  * __Windows__ - `/venv/Scripts/Activate.bat`
+  * __Windows__
+    If activating from bash(default vscode terminal), you'll first have to enter Command Prompt mode by entering: `cmd`,
+    then type `venv\Scripts\activate`. Otherwise if you're already using Command Prompt, just directly type in `venv\Scripts\activate`.
   * __Linux__ - `source /venv/bin/activate`
 * Install packages `pip install -r requirements.txt`
 * run backend `python run.py`
