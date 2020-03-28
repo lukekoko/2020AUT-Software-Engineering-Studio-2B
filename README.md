@@ -3,6 +3,7 @@
 # Frontend
 
 ## steps to run
+* Install node.js LTS version https://nodejs.org/en/
 
 /On a seperate terminal/
 * cd into __frontend__ folder
@@ -12,10 +13,10 @@
 
 ## steps to run
 
-* Ensure python 3.8 and pip is installed
+* Ensure python 3.8 64 bit and pip is installed
 * Install virtualenv `pip install virtualenv`
 * cd into __backend__ folder
-* run `python -m virtualenv venv`
+* run `python -m venv venv`
 * activate virtual environment
   * __Windows__
     If activating from bash(default vscode terminal), you'll first have to enter Command Prompt mode by entering: `cmd`,
