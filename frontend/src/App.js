@@ -44,9 +44,13 @@ export default class App extends Component {
     })
     .then((data) => {
       this.setState({'data': data})
+      this.todoTableRows();
       console.log(data);
     });
   }
+
+  todoTableRows = () => this.state.data.map(item =>
+  <h1>{item.name}</h1> );
 
   render() {
     return (
