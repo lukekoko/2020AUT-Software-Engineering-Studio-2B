@@ -14,9 +14,16 @@ export default class App extends Component {
         { action: "Call Joe", done: false }
       ],
       newItemText: "",
-      data: {}
+      data: []
     };
-    
+    fetch('http://127.0.0.1:5000/')
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      this.setState({'data': data})
+      console.log(data);
+    });
   }
 
   updateNewTextValue = event => {
@@ -38,15 +45,14 @@ export default class App extends Component {
   };
 
   getUser = () => {
-    fetch('http://127.0.0.1:5000/')
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      this.setState({'data': data})
-      console.log(data);
-    });
+    
   }
+
+  todoTableRows = () => this.state.data.map(item =>
+    <tr key={ item.id }>
+    <td>{ item.email}</td>
+    <td>{item.name}</td>
+    </tr> );
 
   render() {
     return (
@@ -57,6 +63,12 @@ export default class App extends Component {
           Add Item
         </button>
         <button className="button" onClick={this.getUser}>Get Users</button>
+        <table>
+                    <thead>
+                        <tr><th>Email</th><th>Name</th></tr>
+                    </thead>
+                    <tbody>{ this.todoTableRows() }</tbody>
+                </table>
       </div>
     );
   }
