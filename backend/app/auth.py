@@ -20,6 +20,8 @@ def register():
     """
     if request.method == 'POST':
         # get request data; name email password
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper JSON"}), 400
         name = request.json.get('name')
         email = request.json.get('email')
         password = request.json.get('password')
@@ -42,7 +44,8 @@ def login():
     outputs: json with access token and refresh token.
     """
     if request.method == 'POST':
-        userSchema = schemas.UserSchema
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper JSON"}), 400
         # get request data; email and password
         email = request.json.get('email')
         password = request.json.get('password')
@@ -54,11 +57,11 @@ def login():
         if (bcrypt.check_password_hash(user.password, password)):
             # create jwt token and send
             access_token = create_access_token(identity={'name': user.name, 'email': user.email})
-            ret = {
+            tokens = {
                 'access_token': create_access_token(identity={'name': user.name, 'email': user.email}),
                 'refresh_token': create_refresh_token(identity={'name': user.name, 'email': user.email})
             }
-            return jsonify(ret), 200
+            return jsonify(tokens), 200
         else:
             return jsonify({"msg": "Wrong username or password"}), 401
 
