@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import ReactDOM from 'react-dom';
 //import logo from './logo.svg';
 //import './App.css';
+import Login from './login';
 
 export default class App extends Component {
   constructor(props) {
@@ -48,6 +50,10 @@ export default class App extends Component {
     
   }
 
+  renderLogin = () => {
+    ReactDOM.render(<Login/>, document.getElementById('root'));
+  }
+
   todoTableRows = () => this.state.data.map(item =>
     <tr key={ item.id }>
     <td>{ item.email}</td>
@@ -69,6 +75,7 @@ export default class App extends Component {
                     </thead>
                     <tbody>{ this.todoTableRows() }</tbody>
                 </table>
+        <button className="button" onClick={this.renderLogin}>Login</button>
       </div>
     );
   }
