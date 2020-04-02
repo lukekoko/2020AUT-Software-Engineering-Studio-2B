@@ -26,7 +26,7 @@ def register():
         email = request.json.get('email')
         password = request.json.get('password')
         # create password hash to store in db
-        pw_hash = bcrypt.generate_password_hash(password)
+        pw_hash = bcrypt.generate_password_hash(password).decode("utf-8")
         # store user data in db
         user = models.User(name, email, pw_hash)
         try:
@@ -56,7 +56,7 @@ def login():
         # # check if password is correct
         if (bcrypt.check_password_hash(user.password, password)):
             # create jwt token and send
-            access_token = create_access_token(identity={'name': user.name, 'email': user.email})
+            access_token = create_access_token(identity=user.name)
             tokens = {
                 'access_token': create_access_token(identity={'name': user.name, 'email': user.email}),
                 'refresh_token': create_refresh_token(identity={'name': user.name, 'email': user.email})

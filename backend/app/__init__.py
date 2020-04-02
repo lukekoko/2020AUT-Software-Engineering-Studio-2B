@@ -9,6 +9,7 @@ CORS(app)
 app.config.from_object('config')
 
 app.config['JWT_SECRET_KEY'] = 'memes'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 
 database.init_db()
 
