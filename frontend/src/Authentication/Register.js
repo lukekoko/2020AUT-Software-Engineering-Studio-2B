@@ -9,9 +9,9 @@ class Register extends Component {
     super(props);
 
     this.state = {
-      name: String,
-      email: String,
-      password: String,
+      name: '',
+      email: '',
+      password: '',
       RegistrationSuccessful: Boolean
     };
 
@@ -62,6 +62,10 @@ class Register extends Component {
       });
   }
 
+  emptyFields(){
+      return this.state.name == '' || this.state.email == '' || this.state.password == '';
+  }
+
   render() {
     return (
       <div>
@@ -97,7 +101,7 @@ class Register extends Component {
               ></input>
             </div>
           </div>
-          <button style={this.submitButton} onClick={this.handleRegister} class="button is-primary">
+          <button style={this.submitButton} onClick={this.handleRegister} disabled={this.emptyFields()} class="button is-primary">
             Register
           </button>
           { this.state.RegistrationSuccessful == false &&
