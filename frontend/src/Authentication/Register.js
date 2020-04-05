@@ -45,7 +45,7 @@ class Register extends Component {
         email: this.state.email,
         password: this.state.password,
       }).then((res) => {
-        Cookies.set("auth-cookie", res.access_token);
+        Cookies.set("auth-cookie", res.data.access_token);
         this.props.history.push("/Home");
       });
   }
