@@ -14,8 +14,6 @@ export default class Home extends Component {
         this.setState({
           user: res.data
         })
-        console.log(res.data);
-        console.log(res);
       });
     }
 

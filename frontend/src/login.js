@@ -12,6 +12,11 @@ class Login extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.RedirectToRegister = this.RedirectToRegister.bind(this);
+    }
+
+    RedirectToRegister() {
+      this.props.history.push('/Register');
     }
 
     handleChange(event) {
@@ -60,6 +65,7 @@ class Login extends Component {
               <h1>Login failed</h1>
             }
           </form>
+          <button onClick={this.RedirectToRegister}>Register</button>
       </div>
     );
   }

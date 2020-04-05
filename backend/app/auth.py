@@ -32,9 +32,12 @@ def register():
         try:
             database.db_session.add(user)
             database.db_session.commit()
+            token = {
+            'access_token': create_access_token(identity={'name': user.name, 'email': user.email}),
+            }
         except:
             return jsonify({"msg": "Cannot register"}), 401
-        return jsonify({"msg": "Success!"}), 200
+        return jsonify(token), 200
 
 @app.route('/login', methods=['POST'])
 def login():
