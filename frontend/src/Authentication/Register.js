@@ -70,7 +70,6 @@ class Register extends Component {
             <div class="field">
               <div class="control">
                 <input
-                    required
                   class="input"
                   type="text"
                   placeholder="Name"
