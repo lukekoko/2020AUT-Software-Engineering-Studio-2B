@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Cookies from "js-cookie";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
+import { getToken } from './JwtConfig';
 
 class Register extends Component {
   constructor(props) {
@@ -11,10 +12,18 @@ class Register extends Component {
       name: String,
       email: String,
       password: String,
+      RegistrationSuccessful: Boolean
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
+  }
+
+  componentDidMount() {
+    const jwt = getToken();
+    if (jwt) {
+      this.props.history.push('/Home');
+    }
   }
 
   form = {
@@ -47,6 +56,9 @@ class Register extends Component {
       }).then((res) => {
         Cookies.set("auth-cookie", res.data.access_token);
         this.props.history.push("/Home");
+      },
+      (error) => {
+        this.setState({RegistrationSuccessful:false});
       });
   }
 
@@ -58,6 +70,7 @@ class Register extends Component {
             <div class="field">
               <div class="control">
                 <input
+                    required
                   class="input"
                   type="text"
                   placeholder="Name"
@@ -88,6 +101,9 @@ class Register extends Component {
           <button style={this.submitButton} onClick={this.handleRegister} class="button is-primary">
             Register
           </button>
+          { this.state.RegistrationSuccessful == false &&
+              <h1>Registration failed</h1>
+            }
         </div>
       </div>
     );
