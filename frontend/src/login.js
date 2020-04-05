@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import ReactDOM from 'react-dom';
+import Cookies from 'js-cookie'
+import { withRouter } from 'react-router-dom';
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
         email: '',
         password: '',
-        token: ''
+        loginSuccessful: Boolean
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,19 +32,11 @@ export default class Login extends Component {
     }).then((response) => {
         if (response.ok) {
             return response.json().then(data => {
-                console.log(data);
-                this.setState({token: data.access_token});
-                ReactDOM.render(
-                    <div>
-                        <h1>Login Success</h1> 
-                        <p>Token: {this.state.token}</p>
-                    </div>
-                    , document.getElementById('root'));
-
+              Cookies.set('auth-cookie', data.access_token);
+              this.props.history.push('/Home');
             });
         } else {
-            ReactDOM.render(<h1>Login failed</h1>, document.getElementById('root'));
-
+            this.setState({loginSuccessful: false});
         }
     })
     event.preventDefault();
@@ -63,8 +56,12 @@ export default class Login extends Component {
                 <input type="password" placeholder="password" name="password" value={this.state.password} onChange={this.handleChange} ></input>
             </label>
             <input type="submit" value="login" />
+            { this.state.loginSuccessful == false &&
+              <h1>Login failed</h1>
+            }
           </form>
       </div>
     );
   }
   }
+export default withRouter(Login);
