@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Cookies from "js-cookie";
 import { withRouter } from "react-router-dom";
 import { Button, Header, Grid, Form } from "semantic-ui-react";
+import axios from "axios";
 
 import "./login.scss";
 
@@ -13,9 +14,11 @@ class Login extends Component {
       password: "",
       loginSuccessful: Boolean,
     };
+
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
     this.RedirectToRegister = this.RedirectToRegister.bind(this);
+
   }
 
   RedirectToRegister() {
@@ -26,28 +29,21 @@ class Login extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  handleSubmit(event) {
-    fetch("http://127.0.0.1:5000/login", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+  handleLogin() {
+    axios
+      .post("/login", {
         email: this.state.email,
-        password: this.state.password,
-      }),
-    }).then((response) => {
-      if (response.ok) {
-        return response.json().then((data) => {
-          Cookies.set("auth-cookie", data.access_token);
+        password: this.state.password
+      })
+      .then(
+        (res) => {
+          Cookies.set("auth-cookie", res.data.access_token);
           this.props.history.push("/Home");
-        });
-      } else {
-        this.setState({ loginSuccessful: false });
-      }
-    });
-    event.preventDefault();
+        },
+        (error) => {
+          this.setState({ loginSuccessful: false });
+        }
+      );
   }
 
   render() {
@@ -60,15 +56,14 @@ class Login extends Component {
                 <Grid.Row>
                   <Grid.Column>
                     <Header className="htn">Welcome back!</Header>
-                    <Form onSubmit={this.handleSubmit}>
+                    <Form onSubmit={this.handleLogin}>
                       <Form.Field>
                         <input
-                          className="regis_input_type2"
                           name="email"
+                          className="regis_input_type2"
                           placeholder="Email"
                           style={{ width: "100%" }}
                           onChange={this.handleChange}
-                          name="email"
                           value={this.state.email}
                         />
                       </Form.Field>
@@ -79,8 +74,8 @@ class Login extends Component {
                           placeholder="Password"
                           style={{ width: "100%" }}
                           type="password"
-                          value={this.state.password}
                           onChange={this.handleChange}
+                          value={this.state.password}
                         />
                       </Form.Field>
                       <Form.Field>

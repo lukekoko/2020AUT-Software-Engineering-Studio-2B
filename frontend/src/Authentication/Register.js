@@ -101,7 +101,6 @@ class Register extends Component {
                           type="text"
                           placeholder="Name"
                           style={{ width: "100%" }}
-                          onChange={this.handleChange}
                           value={this.state.name}
                           onChange={this.handleInputChange}
                         />
