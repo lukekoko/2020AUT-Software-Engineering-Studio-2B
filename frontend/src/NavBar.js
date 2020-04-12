@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Cookies from "js-cookie";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
+import foot from "./assets/foot.jpg";
+import "bulma/css/bulma.css";
 
 class NavBar extends Component {
   constructor(props) {
@@ -11,34 +13,42 @@ class NavBar extends Component {
   logout = () => {
     Cookies.remove("auth-cookie");
     this.props.history.push("/login");
-  }
+  };
+  
 
   render() {
     return (
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">
-          2A project
-        </a>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-item nav-link" href="#">
-              Home
-            </a>
-            <a class="nav-item nav-link" href="#">
-              Features
-            </a>
-            <a class="nav-item nav-link" href="#">
-              Pricing
-            </a>
+      <nav
+        class="navbar is-dark"
+        role="navigation"
+        aria-label="main navigation"
+      >
+        <div class="navbar-brand">
+          <a class="navbar-item">
+            <img src={foot} width="150" height="110"></img>
+          </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item">Dashboard</a>
+            <a class="navbar-item">Tasks</a>
+            <a class="navbar-item">Timesheets</a>
+            <a class="navbar-item">Chat</a>
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                <button
+                  onClick={() => this.logout()}
+                  class="button is-light"
+                  type="submit"
+                >Log out</button>
+              </div>
+            </div>
           </div>
         </div>
-        <button
-          onClick={() => this.logout()}
-          class="btn btn-outline-success my-2 my-sm-0"
-          type="submit"
-        >
-          Log Out
-        </button>
       </nav>
     );
   }
