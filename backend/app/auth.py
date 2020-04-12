@@ -25,10 +25,11 @@ def register():
         name = request.json.get('name')
         email = request.json.get('email')
         password = request.json.get('password')
+        userType = request.json.get('userType')
         # create password hash to store in db
         pw_hash = bcrypt.generate_password_hash(password).decode("utf-8")
         # store user data in db
-        user = models.User(name, email, pw_hash)
+        user = models.User(name=name, email=email, password=pw_hash, userType=userType)
         try:
             database.db_session.add(user)
             database.db_session.commit()

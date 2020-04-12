@@ -13,7 +13,7 @@ class Register extends Component {
       email: "",
       password: "",
       RegistrationSuccessful: Boolean,
-      userType: "Employee",
+      userType: 0,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -78,7 +78,7 @@ class Register extends Component {
 
   onRadioChange = (e) => {
     this.setState({
-      userType: e.target.value,
+      userType: parseInt(e.target.value),
     });
   };
 
@@ -120,18 +120,18 @@ class Register extends Component {
               <label class="radio">
                 <input
                   type="radio"
-                  checked={this.state.userType === "Employee"}
+                  checked={this.state.userType === 0}
                   onChange={this.onRadioChange}
-                  value="Employee"
+                  value={0}
                 />
                 Employee
               </label>
               <label class="radio">
                 <input
                   type="radio"
-                  checked={this.state.userType === "Manager"}
+                  checked={this.state.userType === 1}
                   onChange={this.onRadioChange}
-                  value="Manager"
+                  value={1}
                 />
                 Manager
               </label>
