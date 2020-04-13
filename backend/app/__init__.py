@@ -14,9 +14,19 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 
 database.init_db()
 
+# database.destroy_db() # Remove all tables and data from db
+# database.reset_db() # Recreate db
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     database.db_session.remove()
 
 
 from app import views, models, auth
+
+def populate_db():
+    user = models.User(name="test", email="test@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
+    database.db_session.add(user)
+    database.db_session.commit()
+
+# populate_db() # fill db with test user

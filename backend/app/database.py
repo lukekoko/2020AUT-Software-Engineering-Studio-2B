@@ -16,6 +16,7 @@ def init_db():
     Base.metadata.create_all(bind=engine)
 
 def destroy_db():
+    import app.models
     Base.metadata.drop_all(bind=engine)
 
 def reset_db():
