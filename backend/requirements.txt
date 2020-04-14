@@ -6,3 +6,4 @@ flask_bcrypt==0.7.1
 flask_cors==3.0.8
 flask_jwt_extended==3.24.1
 flask_sqlalchemy==2.4.1
+gevent

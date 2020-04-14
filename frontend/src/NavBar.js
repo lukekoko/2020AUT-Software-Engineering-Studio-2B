@@ -14,7 +14,6 @@ class NavBar extends Component {
     Cookies.remove("auth-cookie");
     this.props.history.push("/login");
   };
-  
 
   render() {
     return (
@@ -31,10 +30,28 @@ class NavBar extends Component {
 
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item">Dashboard</a>
+            <a
+              class="navbar-item"
+              onClick={() => {
+                this.props.history.push({
+                  pathname: `/home`,
+                });
+              }}
+            >
+              Dashboard
+            </a>
             <a class="navbar-item">Tasks</a>
             <a class="navbar-item">Timesheets</a>
-            <a class="navbar-item">Chat</a>
+            <a
+              class="navbar-item"
+              onClick={() => {
+                this.props.history.push({
+                  pathname: `/chat`,
+                });
+              }}
+            >
+              Chat
+            </a>
           </div>
 
           <div class="navbar-end">
@@ -44,7 +61,9 @@ class NavBar extends Component {
                   onClick={() => this.logout()}
                   class="button is-light"
                   type="submit"
-                >Log out</button>
+                >
+                  Log out
+                </button>
               </div>
             </div>
           </div>
