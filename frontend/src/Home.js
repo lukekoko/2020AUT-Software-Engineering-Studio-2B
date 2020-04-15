@@ -6,6 +6,8 @@ import baby from "./assets/baby.gif";
 import relatable from "./assets/relatable.jpg";
 import fire from "./assets/fire.jpg";
 import toe from "./assets/toe.jpg";
+import Cookies from "js-cookie";
+
 
 export default class Home extends Component {
   constructor(props) {
@@ -20,6 +22,7 @@ export default class Home extends Component {
         this.setState({
           user: res.data,
         });
+        Cookies.set("username", res.data.name);
       });
   }
 

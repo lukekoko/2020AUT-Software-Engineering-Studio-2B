@@ -24,3 +24,10 @@ def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     return jsonify(current_user), 200
+
+@app.route('/users', methods=['GET'])
+@jwt_required
+def getUsers():
+    userSchema = schemas.UserSchema
+    users = models.User.query.with_entities(models.User.id, models.User.name, models.User.email).all()
+    return jsonify([userSchema.from_orm(user).dict() for user in users])
