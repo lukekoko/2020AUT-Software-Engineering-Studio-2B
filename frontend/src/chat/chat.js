@@ -85,8 +85,8 @@ class Chat extends Component {
     }
   }
 
-  connectRoom(name) {
-    console.log(name);
+  connectRoom(event) {
+    console.log(event.target.value);
     // socket.emit("join", { username: Cookies.get("username"), room: "name" });
   }
 
@@ -97,17 +97,18 @@ class Chat extends Component {
         <div class="columns" style={{ padding: "10px" }}>
           <div class="column is-one-fifth">
             {this.state.users.map((item) => (
-              <div style={{ padding: "10px" }} key={item.email}>
-                <button
-                  id={item.email}
-                  key={item.email}
-                  class="button is-dark is-large is-fullwidth is-rounded"
-                  onClick={this.connectRoom(item.name)}
-                >
-                  {item.name}
-                </button>
-              </div>
-            ))}
+      <div style={{ padding: "10px" }} key={item.email}>
+        <button
+          id={item.email}
+          key={item.email}
+          class="button is-dark is-large is-fullwidth is-rounded"
+          onClick={this.connectRoom}
+          value = {item.name}
+        >
+          {item.name}
+        </button>
+      </div>
+    ))}
           </div>
           <div class="column">
             <article
