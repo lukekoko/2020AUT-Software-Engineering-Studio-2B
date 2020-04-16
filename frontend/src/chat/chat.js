@@ -111,7 +111,6 @@ class Chat extends Component {
     var user = this.state.users.filter(
       (user) => parseInt(user.id) === parseInt(event.target.value)
     )[0];
-    console.log(user);
     // var room = this.state.username + "-" + event.target.value;
     var room = parseInt(this.state.userid) + parseInt(event.target.value);
     if (this.state.room != "") {
