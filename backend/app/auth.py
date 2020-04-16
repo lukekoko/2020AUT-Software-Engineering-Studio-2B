@@ -34,7 +34,7 @@ def register():
             database.db_session.add(user)
             database.db_session.commit()
             token = {
-            'access_token': create_access_token(identity={'name': user.name, 'email': user.email}),
+            'access_token': create_access_token(identity={'id': user.id, 'name': user.name, 'email': user.email}),
             }
         except:
             return jsonify({"msg": "Cannot register"}), 401
@@ -62,8 +62,8 @@ def login():
             # create jwt token and send
             access_token = create_access_token(identity=user.name)
             tokens = {
-                'access_token': create_access_token(identity={'name': user.name, 'email': user.email}),
-                'refresh_token': create_refresh_token(identity={'name': user.name, 'email': user.email})
+                'access_token': create_access_token(identity={'id': user.id, 'name': user.name, 'email': user.email}),
+                'refresh_token': create_refresh_token(identity={'id': user.id, 'name': user.name, 'email': user.email})
             }
             return jsonify(tokens), 200
         else:

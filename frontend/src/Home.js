@@ -22,7 +22,8 @@ export default class Home extends Component {
         this.setState({
           user: res.data,
         });
-        Cookies.set("username", res.data.name);
+        Cookies.set("username", res.data['name']);
+        Cookies.set("userid", res.data['id']);
       });
   }
 
@@ -51,28 +52,10 @@ export default class Home extends Component {
             </figure>
           </div>
           <div class="column">
-            <figure class="image is-16by9">
-              <iframe
-                class="has-ratio"
-                width="640"
-                height="360"
-                src="https://www.youtube.com/embed/nSLURZ054IQ"
-                frameborder="0"
-                allowfullscreen
-              ></iframe>
-            </figure>
+            
           </div>
           <div class="column">
-            <figure class="image is-16by9">
-              <iframe
-                class="has-ratio"
-                width="640"
-                height="360"
-                src="https://www.youtube.com/embed/9bZkp7q19f0"
-                frameborder="0"
-                allowfullscreen
-              ></iframe>
-            </figure>
+            
           </div>
           <div class="column">
             <figure class="image is-square">
