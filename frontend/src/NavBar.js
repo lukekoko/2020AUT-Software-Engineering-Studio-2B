@@ -18,7 +18,10 @@ class NavBar extends Component {
     Cookies.remove("auth-cookie");
     this.props.history.push("/login");
   };
-  
+
+    routeToList = () => {
+        this.props.history.push("/List");
+    }
 
   render() {
     return (
@@ -36,7 +39,8 @@ class NavBar extends Component {
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start menu">
             <a class="navbar-item">Board</a>
-            <a class="navbar-item">List</a>
+            <a class="navbar-item"
+                onClick={() => this.routeToList()} >List</a> 
             <a class="navbar-item">Calander</a>
             <a class="navbar-item">Timesheets</a>
           </div>
