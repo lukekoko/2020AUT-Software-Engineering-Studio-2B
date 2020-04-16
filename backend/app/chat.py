@@ -6,7 +6,7 @@ from flask_jwt_extended import ( jwt_required )
 messages = []
 
 @socketio.on('connect')
-@jwt_required
+# @jwt_required
 def connect():
     print('Client connected')
 
@@ -15,13 +15,13 @@ def disconnect():
     print('Client disconnected')
 
 @socketio.on('message')
-@jwt_required
+# @jwt_required
 def handle_message(message):
     messages.append(message);
     emit('sentMessage', {'data': messages})
 
 @socketio.on('join')
-@jwt_required
+# @jwt_required
 def on_join(data):
     username = data['username']
     room = data['room']
@@ -36,7 +36,7 @@ def on_leave(data):
     send(username + ' has left the room: ' + str(room), room=room)
 
 @socketio.on('sendMessage')
-@jwt_required
+# @jwt_required
 def message(data):
     print(data)
     room = data['room']
