@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import axios from "axios";
 import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
-import baby from "./assets/baby.gif";
-import relatable from "./assets/relatable.jpg";
-import fire from "./assets/fire.jpg";
-import toe from "./assets/toe.jpg";
 import Cookies from "js-cookie";
 
+//import baby from "./assets/baby.gif";
+//import relatable from "./assets/relatable.jpg";
+//import fire from "./assets/fire.jpg";
+//import toe from "./assets/toe.jpg";
+
+import "./Task/Home.scss";
 
 export default class Home extends Component {
   constructor(props) {
@@ -30,7 +32,7 @@ export default class Home extends Component {
   render() {
     return (
       <div>
-        <Navbar></Navbar>
+        <Navbar />
         <div>
           <section class="hero">
             <div class="hero-body">
@@ -44,34 +46,6 @@ export default class Home extends Component {
             </div>
           </section>
         </div>
-
-        <div class="columns">
-          <div class="column">
-            <figure class="image is-square">
-              <img src={baby} style={{ width: "500px", height: "500px" }}></img>
-            </figure>
-          </div>
-          <div class="column">
-            
-          </div>
-          <div class="column">
-            
-          </div>
-          <div class="column">
-            <figure class="image is-square">
-              <img
-                src={relatable}
-                style={{ width: "500px", height: "500px" }}
-              ></img>
-            </figure>
-          </div>
-        </div>
-        <figure class="image">
-          <img src={fire} style={{ width: "100%", height: "400px" }}></img>
-        </figure>
-        <figure class="image">
-          <img src={toe} style={{ width: "100%", height: "400px" }}></img>
-        </figure>
       </div>
     );
   }

@@ -1,0 +1,30 @@
+@import "../styles/variables";
+@import "../styles/mixins";
+
+
+.navGrad{
+    height: 70px;
+    //background-color: red; 
+    background-image: linear-gradient(to right, rgb(97, 80, 109) , rgb(184, 159, 214), rgb(158, 216, 243) ) !important;
+}
+
+.navText{
+    color: white;
+    padding: 80px; 
+}
+
+.logo{
+    height: 300px;
+    width: 100px;
+}
+
+.button{
+    background-color: rgb(158, 216, 243);
+    font-weight: bolder;
+    color: white; 
+}
+
+.menu{
+    font-weight: bolder;
+    color: white;
+}
