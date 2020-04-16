@@ -5,7 +5,6 @@
 ## steps to run
 * Install node.js LTS version https://nodejs.org/en/
 
-/On a seperate terminal/
 * cd into __frontend__ folder
 * run `npm install`
 * run `npm start`
@@ -13,6 +12,7 @@
 
 ## steps to run
 
+On a seperate terminal
 * Ensure python 3.8 64 bit and pip is installed
 * Install virtualenv `pip install virtualenv`
 * cd into __backend__ folder
@@ -24,3 +24,12 @@
   * __Linux__ - `source /venv/bin/activate`
 * Install packages `pip install -r requirements.txt`
 * run backend `python run.py`
+
+# Common problems
+## Errors when pulling new changes or changing branches
+* Try to update packages for both python and react
+  * __Frontend__ - npm install
+  * __Backend__ - pip install -r requirements.txt
+
+## Errors when trying to push to github
+* Ensure that you have been given access to the github
