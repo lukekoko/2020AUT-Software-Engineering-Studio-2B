@@ -25,6 +25,13 @@ On a seperate terminal
 * Install packages `pip install -r requirements.txt`
 * run backend `python run.py`
 
+# Docker
+If you want to use docker this is how.
+* ensure docker and docker-compose is installed
+* cd into root directory
+* run `docker-compose build`
+* run `docker-compose up` 
+
 # Common problems
 ## Errors when pulling new changes or changing branches
 * Try to update packages for both python and react

@@ -3,12 +3,6 @@ import axios from "axios";
 import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
 import Cookies from "js-cookie";
-
-//import baby from "./assets/baby.gif";
-//import relatable from "./assets/relatable.jpg";
-//import fire from "./assets/fire.jpg";
-//import toe from "./assets/toe.jpg";
-
 import "./Task/Home.scss";
 
 export default class Home extends Component {

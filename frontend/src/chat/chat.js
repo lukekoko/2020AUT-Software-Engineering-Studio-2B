@@ -139,7 +139,7 @@ class Chat extends Component {
                 <button
                   id={item.email}
                   key={item.email}
-                  class="button is-dark is-large is-fullwidth is-rounded"
+                  class="button is-dark is-large is-fullwidth"
                   onClick={this.connectRoom}
                   value={item.id}
                 >

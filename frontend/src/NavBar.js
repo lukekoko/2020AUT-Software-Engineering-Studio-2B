@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Cookies from "js-cookie";
 import { withRouter } from "react-router-dom";
-import logo from "./assets/logo512.png";
 import core from "./assets/core.jpg";
 import "bulma/css/bulma.css";
-import { Button, Header, Grid, Form, Menu} from "semantic-ui-react";
 
 import "./Task/Home.scss";
 
@@ -35,7 +33,7 @@ class NavBar extends Component {
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
             <a
-              class="navbar-item"
+              class="navbar-item has-text-white"
               onClick={() => {
                 this.props.history.push({
                   pathname: `/home`,
@@ -44,10 +42,11 @@ class NavBar extends Component {
             >
               Dashboard
             </a>
-            <a class="navbar-item">Tasks</a>
-            <a class="navbar-item">Timesheets</a>
+            <a class="navbar-item has-text-white">Tasks</a>
+            <a class="navbar-item has-text-white">Timesheets</a>
+            <a class="navbar-item has-text-white">Calander</a>
             <a
-              class="navbar-item"
+              class="navbar-item has-text-white"
               onClick={() => {
                 this.props.history.push({
                   pathname: `/chat`,
