@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import Login from './Authentication/login';
 import Home from './Home';
-import List from './List';
+import List from './TeamList/TeamList';
 import Register from './Authentication/Register';
 import AuthenticationGuard from './Authentication/AuthenticationGuard';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';

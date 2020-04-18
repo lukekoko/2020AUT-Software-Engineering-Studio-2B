@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
+import TeamList from "./TeamList/TeamList";
 //import baby from "./assets/baby.gif";
 //import relatable from "./assets/relatable.jpg";
 //import fire from "./assets/fire.jpg";
@@ -38,6 +39,7 @@ export default class Home extends Component {
                 </h1>
                 <p>Email: {this.state.user.email}</p>
                 <p>Name: {this.state.user.name}</p>
+                {this.state.user.userType && <TeamList></TeamList>}
               </div>
             </div>
           </section>

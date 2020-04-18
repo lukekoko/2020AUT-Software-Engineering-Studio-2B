@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\app",
+    "\\backend\\app\\__pycache__",
+    "\\frontend",
+    "\\frontend\\src",
+    "\\frontend\\src\\Task"
+  ],
+  "SelectedNode": "\\frontend\\src\\NavBar.js",
+  "PreviewInSolutionExplorer": false
+}
