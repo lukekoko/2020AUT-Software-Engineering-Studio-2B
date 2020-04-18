@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
+import TeamList from "./TeamList/TeamList";
 import Cookies from "js-cookie";
 
 //import baby from "./assets/baby.gif";
@@ -42,6 +43,7 @@ export default class Home extends Component {
                 </h1>
                 <p>Email: {this.state.user.email}</p>
                 <p>Name: {this.state.user.name}</p>
+                {this.state.user.userType && <TeamList></TeamList>}
               </div>
             </div>
           </section>

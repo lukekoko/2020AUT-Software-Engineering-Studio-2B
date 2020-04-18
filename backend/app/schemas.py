@@ -5,6 +5,7 @@ class UserSchema(BaseModel):
     id: int
     name: str
     email: EmailStr
+    userType: int
 
     class Config:
         orm_mode = True
