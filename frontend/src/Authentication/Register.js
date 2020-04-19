@@ -89,7 +89,7 @@ class Register extends Component {
         <div className="container">
           <Grid className="card" style={{ width: "50%" }}>
             <Grid.Column width={16}>
-              <Grid stackable style={{ width: "100%" }}>
+              <Grid stackable style={{ justifyContent: "center" }}>
                 <Grid.Row>
                   <Grid.Column>
                     <Header className="htn">Register</Header>
