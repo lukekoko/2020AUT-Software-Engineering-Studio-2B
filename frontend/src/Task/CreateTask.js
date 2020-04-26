@@ -24,13 +24,16 @@ class CreateTask extends Component {
       loginSuccessful: Boolean,
       description: [],
       users: [],
+      user: null, 
     };
     this.getUsers = this.getUsers.bind(this);
+    this.createTask = this.createTask.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
     this.getUsers();
+    this.getCurrentUser();
   }
 
   handleChange(event) {
@@ -58,6 +61,39 @@ class CreateTask extends Component {
       });
   }
 
+  getCurrentUser(){ 
+    axios
+    .get("/protected", { headers: { Authorization: getHeaderToken() } })
+    .then((res) => {
+      this.setState({
+        user: res.data,
+      });
+      Cookies.set("username", res.data['name']);
+      Cookies.set("userid", res.data['id']);
+    });
+  }
+
+  createTask() {
+
+    console.log(this.state.user['name'], this.state.title, this.state.description, this.state.user['id'], this.state.users)
+    axios
+      .post("/createTask", {
+        name: this.state.user['name'],
+        title: this.state.title, 
+        description: this.state.description, 
+        assignerID: this.state.user['id'], 
+        assignedIDS: this.state.users
+      })
+      .then(
+        (res) => {
+          alert("Create Task Successful", res)
+        },
+        (error) => {
+          alert("Create Task Error", error)
+        }
+      );
+  }
+
   render() {
     return (
       <div>
@@ -70,7 +106,7 @@ class CreateTask extends Component {
                   <Grid.Row>
                     <Grid.Column>
                       <Header className="htn">Create a task</Header>
-                      <Form onSubmit={this.handleLogin}>
+                      <Form onSubmit={this.createTask}>
                         <Form.Field>
                           <input
                             name="title"
