@@ -42,7 +42,7 @@ class CreateTask extends Component {
       .get("/users", { headers: { Authorization: getHeaderToken() } })
       .then((res) => {
         if (res.data) {
-          {
+          
             res.data.map((item) =>
               this.setState({
                 users: this.state.users.concat({
@@ -52,7 +52,7 @@ class CreateTask extends Component {
                 }),
               })
             );
-          }
+          
           console.log(res.data);
         }
       });
