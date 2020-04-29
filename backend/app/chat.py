@@ -2,6 +2,7 @@ from flask_socketio import send, emit, join_room, leave_room
 from flask import Flask, render_template, jsonify, request
 from app import app, socketio, models, schemas, database
 from flask_jwt_extended import ( jwt_required, get_jwt_identity )
+from collections import deque
 
 messages = []
 
@@ -24,7 +25,6 @@ def handle_message(message):
 @jwt_required
 def on_join(data):
     # get messages from db
-    print(data)
     username = data['username']
     room = data['room']
     join_room(room)
@@ -72,22 +72,37 @@ def createRoom():
         if not request.is_json:
             return jsonify({"msg": "Not a proper JSON"}), 400
         current_user = get_jwt_identity()
-        # get users from database who want to be connected
-        filteredUsers = models.User.query.filter(models.User.id.in_(request.json.get('users'))).all()
-        # creating room name
-        roomname = current_user['name']
-        for user in filteredUsers:
-            roomname += ", " + user.name
-        # adding room to users
         currentUser = models.User.query.filter_by(id=current_user['id']).first()
-        filteredUsers.append(currentUser)
-        room = models.ChatRooms(name=roomname)
-        # add rooms to users
-        for user in filteredUsers:
-            user.rooms.append(room)
-            database.db_session.add(user)
-        database.db_session.commit()
-        return jsonify({"msg": "Room Created"}), 200
+        # get users from database who want to be connected
+        filteredUsers = (models.User.query.filter(models.User.id.in_(request.json.get('users'))).all()) 
+        filteredUsers.insert(0, currentUser)
+        # check if users already have a room
+        userNames = []
+        for i in filteredUsers:
+            userNames.append(i.name)
+        testUsers = deque(userNames)
+        for i in range(len(testUsers)):
+            duplicateRoomName = ', '.join(testUsers)
+            testUsers.rotate(1)
+            roomFound = models.ChatRooms.query.filter_by(name=duplicateRoomName).first()
+            if (roomFound):
+                print(duplicateRoomName)
+                return jsonify({"msg": "Room already made"}), 400
+            
+        # creating room name
+        roomname = ', '.join(userNames)
+        # adding room to users
+        try:
+            room = models.ChatRooms(name=roomname)
+            # add rooms to users
+            for user in filteredUsers:
+                user.rooms.append(room)
+                database.db_session.add(user)
+            database.db_session.commit()
+            return jsonify({"msg": "Room Created"}), 200
+        except Exception as e:
+            print(e)
+            return jsonify({"msg": "error"}), 400
     return jsonify({"msg": "error"}), 400
 
 # getting rooms
@@ -103,12 +118,12 @@ def getRooms():
 @app.route('/rooms/messages', methods=['POST'])
 @jwt_required
 def getRoomMessages():
-    print(request.json.get('room'))
+    roomid = request.json.get('room')
     if (request.method == 'POST'):
         if not request.is_json:
             return jsonify({"msg": "Not a proper JSON"}), 400
     previousMessages = []
-    query = database.db_session.query(models.Messages, models.User).filter(models.Messages.userId == models.User.id).filter(models.Messages.roomId == request.json.get('room')).all()
+    query = database.db_session.query(models.Messages, models.User).filter(models.Messages.roomId == roomid).filter(models.Messages.userId == models.User.id).all()
     for message in query:
         previousMessages.append({
             'id': message[0].id,
@@ -119,3 +134,11 @@ def getRoomMessages():
             'message': message[0].message
         })
     return jsonify(previousMessages), 200
+
+@app.route('/rooms/users', methods=['POST'])
+@jwt_required
+def getUsersThatAreNotInRoomsTogether():
+    userid = request.json.get('userid')
+    userSchema = schemas.UserSchema
+    users = models.User.query.with_entities(models.User.id, models.User.name, models.User.email).all()
+    return jsonify([userSchema.from_orm(user).dict() for user in users])

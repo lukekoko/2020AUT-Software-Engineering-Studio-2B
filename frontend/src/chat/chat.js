@@ -17,8 +17,8 @@ import {
 } from "semantic-ui-react";
 
 // http://34.87.237.202:5000 for docker
-// var url = "http://localhost:5000";
-var url = "http://34.87.237.202:5000";
+var url = "http://localhost:5000";
+// var url = "http://34.87.237.202:5000";
 var socket;
 class Chat extends Component {
   constructor(props) {
@@ -100,6 +100,10 @@ class Chat extends Component {
       if (parseInt(data["userid"]) == parseInt(this.state.userid)) {
         this.getPreviousMessages();
       }
+    });
+
+    socket.on("roomCreated", (data) => {
+      this.getRooms();
     });
   }
 
@@ -206,12 +210,19 @@ class Chat extends Component {
           this.getRooms();
         },
         (error) => {
-          alert("Create Task Error", error);
+          alert("Create room error", error);
         }
       );
   }
 
   connectRoom(event) {
+    if (this.state.room != '') {
+      socket.emit("leave", {
+        username: this.state.username,
+        userid: this.state.userid,
+        room: this.state.room
+      });
+    }
     socket.emit("join", {
       username: this.state.username,
       userid: this.state.userid,
@@ -225,7 +236,6 @@ class Chat extends Component {
       messages: [],
       roomDisplay: room.name,
     });
-    this.getPreviousMessages();
   }
 
   render() {
