@@ -47,7 +47,7 @@ class Chat extends Component {
   componentDidMount() {
     this.getUsers();
     this.getRooms();
-    socket = io("http://localhost:5000", {
+    socket = io("http://34.87.237.202:5000", {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -95,7 +95,7 @@ class Chat extends Component {
 
     socket.on("success", (data) => {
       console.log(data);
-      this.getPreviousMessages();
+      // this.getPreviousMessages();
     });
   }
 
@@ -146,7 +146,6 @@ class Chat extends Component {
     {room: this.state.room},
     { headers: { Authorization: getHeaderToken() } })
     .then((res) => {
-      console.log(res.data);
       res.data.map((item)=> {
         this.setState({
           messages: this.state.messages.concat(item)
@@ -198,7 +197,6 @@ class Chat extends Component {
       )
       .then(
         (res) => {
-          alert("Create Task Successful", res);
           this.getRooms();
         },
         (error) => {
@@ -220,6 +218,7 @@ class Chat extends Component {
       messages: [],
       roomDisplay: room.name,
     });
+    this.getPreviousMessages();
   }
 
   render() {
