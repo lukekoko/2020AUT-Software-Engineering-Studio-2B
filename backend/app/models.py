@@ -18,6 +18,7 @@ class User(Base):
     managerId = Column(Integer, unique=False, nullable=True)
     tasks = relationship("Tasks", secondary=userTasks)
     timesheets = relationship("Timesheet")
+    rooms = relationship("ChatRooms")
     messages = relationship("Messages")
     
     def __init__(self, name=None, email=None, password=None, userType=None, hourlyWage=None, managerId=None):
@@ -54,8 +55,20 @@ class Log(Base):
     id = Column(Integer, primary_key=True)
     datetime = Column(DateTime, unique=True, nullable=False)
 
-
-class Messages(Base):
-    __tablename__ = 'messages'
+class ChatRooms(Base):
+    __tablename__ = 'ChatRooms'
     id = Column(Integer, primary_key=True)
     userId = Column(Integer, ForeignKey('users.id'), nullable=False)
+    name = Column(String(100), nullable=False)
+    messages = relationship('Messages')
+
+class Messages(Base):
+    __tablename__ = 'Messages'
+    id = Column(Integer, primary_key=True)
+    userId = Column(Integer, ForeignKey('users.id'), nullable=False)
+    roomId = Column(Integer, ForeignKey('ChatRooms.id'), nullable=False)
+    time = Column(Integer)
+    message = Column(String(500))
+
+    def __repr__(self):
+        return '<Message %r>' % (self.message)

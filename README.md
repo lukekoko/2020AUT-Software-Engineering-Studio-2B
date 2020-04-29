@@ -27,6 +27,7 @@ On a seperate terminal
 
 # Docker
 If you want to use docker this is how.
+* change proxy in package.json to http://backend:5000
 * ensure docker and docker-compose is installed
 * cd into root directory
 * run `docker-compose build`
