@@ -16,6 +16,8 @@ import {
   Icon,
 } from "semantic-ui-react";
 
+// http://34.87.237.202:500 for docker
+var url = "http://34.87.237.202:5000";
 var socket;
 class Chat extends Component {
   constructor(props) {
@@ -47,7 +49,7 @@ class Chat extends Component {
   componentDidMount() {
     this.getUsers();
     this.getRooms();
-    socket = io("http://34.87.237.202:5000", {
+    socket = io(url, {
       transportOptions: {
         polling: {
           extraHeaders: {
