@@ -24,12 +24,12 @@ def handle_message(message):
 @jwt_required
 def on_join(data):
     # get messages from db
-    # print(data)
+    print(data)
     username = data['username']
     room = data['room']
     join_room(room)
     send(username + ' has entered the room: ' + str(room), room=room)
-    emit('success', 'success', room=room)
+    emit('success', {'userid': data['userid'] }, room=room)
 
 @socketio.on('leave')
 def on_leave(data):

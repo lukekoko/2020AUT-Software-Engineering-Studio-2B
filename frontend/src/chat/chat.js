@@ -16,7 +16,8 @@ import {
   Icon,
 } from "semantic-ui-react";
 
-// http://34.87.237.202:500 for docker
+// http://34.87.237.202:5000 for docker
+// var url = "http://localhost:5000";
 var url = "http://34.87.237.202:5000";
 var socket;
 class Chat extends Component {
@@ -87,17 +88,18 @@ class Chat extends Component {
     });
 
     socket.on("previousMessage", (data) => {
-      data.map((item)=> {
+      data.map((item) => {
         this.setState({
-          messages: this.state.messages.concat(item)
+          messages: this.state.messages.concat(item),
         });
       });
       this.updateScroll();
     });
 
     socket.on("success", (data) => {
-      console.log(data);
-      // this.getPreviousMessages();
+      if (parseInt(data["userid"]) == parseInt(this.state.userid)) {
+        this.getPreviousMessages();
+      }
     });
   }
 
@@ -144,17 +146,19 @@ class Chat extends Component {
 
   getPreviousMessages() {
     axios
-    .post("/rooms/messages", 
-    {room: this.state.room},
-    { headers: { Authorization: getHeaderToken() } })
-    .then((res) => {
-      res.data.map((item)=> {
-        this.setState({
-          messages: this.state.messages.concat(item)
+      .post(
+        "/rooms/messages",
+        { room: this.state.room },
+        { headers: { Authorization: getHeaderToken() } }
+      )
+      .then((res) => {
+        res.data.map((item) => {
+          this.setState({
+            messages: this.state.messages.concat(item),
+          });
         });
+        this.updateScroll();
       });
-      this.updateScroll();
-    });
   }
 
   inputChange(event) {
@@ -210,6 +214,7 @@ class Chat extends Component {
   connectRoom(event) {
     socket.emit("join", {
       username: this.state.username,
+      userid: this.state.userid,
       room: event.target.value,
     });
     var room = this.state.rooms.filter(
@@ -295,7 +300,8 @@ class Chat extends Component {
                 )}
                 {this.state.messages.map((item, i) => (
                   <div key={item.time}>
-                    {new Date(item.time).toLocaleString('en-AU')} - {item.username}: {item.message}
+                    {new Date(item.time).toLocaleString("en-AU")} -{" "}
+                    {item.username}: {item.message}
                   </div>
                 ))}
               </div>
