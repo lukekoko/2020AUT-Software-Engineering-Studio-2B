@@ -24,23 +24,12 @@ def handle_message(message):
 @jwt_required
 def on_join(data):
     # get messages from db
-    previousMessages = []
-    query = database.db_session.query(models.Messages, models.User).filter(models.Messages.userId == models.User.id).filter(models.Messages.roomId == data['room']).all()
-    for message in query:
-        previousMessages.append({
-            'id': message[0].id,
-            'userId': message[0].userId,
-            'roomId': message[0].roomId,
-            'username': message[1].name,
-            'time': message[0].time,
-            'message': message[0].message
-        })
-
+    # print(data)
     username = data['username']
     room = data['room']
     join_room(room)
     send(username + ' has entered the room: ' + str(room), room=room)
-    emit('previousMessage', previousMessages, room=room)
+    emit('success', 'success', room=room)
 
 @socketio.on('leave')
 def on_leave(data):
@@ -92,9 +81,9 @@ def createRoom():
         # adding room to users
         currentUser = models.User.query.filter_by(id=current_user['id']).first()
         filteredUsers.append(currentUser)
+        room = models.ChatRooms(name=roomname)
         # add rooms to users
         for user in filteredUsers:
-            room = models.ChatRooms(name=roomname)
             user.rooms.append(room)
             database.db_session.add(user)
         database.db_session.commit()
@@ -108,5 +97,25 @@ def getRooms():
     roomSchema = schemas.RoomSchema
     # get user that is requesting rooms
     current_user = get_jwt_identity()
-    rooms = models.users = models.ChatRooms.query.filter_by(userId=current_user['id']).all()
+    rooms = models.users = models.ChatRooms.query.join(models.userRooms).filter_by(userId=current_user['id']).all()
     return jsonify([roomSchema.from_orm(room).dict() for room in rooms])
+
+@app.route('/rooms/messages', methods=['POST'])
+@jwt_required
+def getRoomMessages():
+    print(request.json.get('room'))
+    if (request.method == 'POST'):
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper JSON"}), 400
+    previousMessages = []
+    query = database.db_session.query(models.Messages, models.User).filter(models.Messages.userId == models.User.id).filter(models.Messages.roomId == request.json.get('room')).all()
+    for message in query:
+        previousMessages.append({
+            'id': message[0].id,
+            'userId': message[0].userId,
+            'roomId': message[0].roomId,
+            'username': message[1].name,
+            'time': message[0].time,
+            'message': message[0].message
+        })
+    return jsonify(previousMessages), 200

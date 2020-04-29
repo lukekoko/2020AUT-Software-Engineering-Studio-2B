@@ -41,6 +41,7 @@ class Chat extends Component {
     this.getRooms = this.getRooms.bind(this);
     this.createRoom = this.createRoom.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
+    this.getPreviousMessages = this.getPreviousMessages.bind(this);
   }
 
   componentDidMount() {
@@ -91,6 +92,11 @@ class Chat extends Component {
       });
       this.updateScroll();
     });
+
+    socket.on("success", (data) => {
+      console.log(data);
+      this.getPreviousMessages();
+    });
   }
 
   getUsers() {
@@ -133,6 +139,23 @@ class Chat extends Component {
         }
       });
   }
+
+  getPreviousMessages() {
+    axios
+    .post("/rooms/messages", 
+    {room: this.state.room},
+    { headers: { Authorization: getHeaderToken() } })
+    .then((res) => {
+      console.log(res.data);
+      res.data.map((item)=> {
+        this.setState({
+          messages: this.state.messages.concat(item)
+        });
+      });
+      this.updateScroll();
+    });
+  }
+
   inputChange(event) {
     this.setState({
       [event.target.name]: event.target.value,

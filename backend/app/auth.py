@@ -30,6 +30,7 @@ def register():
         pw_hash = bcrypt.generate_password_hash(password).decode("utf-8")
         # store user data in db
         user = models.User(name=name, email=email, password=pw_hash, userType=userType)
+        user.rooms.append(models.ChatRooms(name="General"))
         try:
             database.db_session.add(user)
             database.db_session.commit()

@@ -7,6 +7,12 @@ userTasks = Table('userTasks', Base.metadata,
     Column('taskId', Integer, ForeignKey('tasks.id'))
 )
 
+userRooms = Table('userRooms', Base.metadata,
+    Column('id', Integer, primary_key=True),
+    Column('userId', Integer, ForeignKey('users.id')),
+    Column('roomId', Integer, ForeignKey('ChatRooms.id'))
+ )
+
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
@@ -18,7 +24,7 @@ class User(Base):
     managerId = Column(Integer, unique=False, nullable=True)
     tasks = relationship("Tasks", secondary=userTasks)
     timesheets = relationship("Timesheet")
-    rooms = relationship("ChatRooms")
+    rooms = relationship("ChatRooms", secondary=userRooms, backref='User')
     messages = relationship("Messages")
     
     def __init__(self, name=None, email=None, password=None, userType=None, hourlyWage=None, managerId=None):
@@ -58,9 +64,9 @@ class Log(Base):
 class ChatRooms(Base):
     __tablename__ = 'ChatRooms'
     id = Column(Integer, primary_key=True)
-    userId = Column(Integer, ForeignKey('users.id'), nullable=False)
-    name = Column(String(100), nullable=False)
+    name = Column(String(100), unique=True, nullable=False)
     messages = relationship('Messages')
+    users = relationship('User', secondary=userRooms, backref='ChatRooms')
 
 class Messages(Base):
     __tablename__ = 'Messages'
