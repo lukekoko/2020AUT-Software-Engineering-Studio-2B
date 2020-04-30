@@ -103,6 +103,7 @@ class Chat extends Component {
     });
 
     socket.on("roomCreated", (data) => {
+      // console.log("Room created");
       this.getRooms();
     });
   }
@@ -139,6 +140,8 @@ class Chat extends Component {
             data[key]["name"] = data[key]["name"].replace(
               this.state.username + ", ",
               ""
+            ).replace(
+              ", " + this.state.username, ""
             );
           }
           this.setState({
@@ -216,11 +219,11 @@ class Chat extends Component {
   }
 
   connectRoom(event) {
-    if (this.state.room != '') {
+    if (this.state.room != "") {
       socket.emit("leave", {
         username: this.state.username,
         userid: this.state.userid,
-        room: this.state.room
+        room: this.state.room,
       });
     }
     socket.emit("join", {
