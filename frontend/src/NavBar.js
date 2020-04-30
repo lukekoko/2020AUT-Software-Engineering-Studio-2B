@@ -20,13 +20,13 @@ class NavBar extends Component {
   render() {
     return (
       <nav
-        class="navbar navGrad" 
+        class="navbar navGrad"
         role="navigation"
         aria-label="main navigation"
       >
         <div class="navbar-brand">
           <a class="navbar-item">
-            <img src={core} class="logo"/>
+            <img src={core} class="logo" />
           </a>
         </div>
 
@@ -42,7 +42,16 @@ class NavBar extends Component {
             >
               Dashboard
             </a>
-            <a class="navbar-item has-text-white">Tasks</a>
+            <a
+              class="navbar-item has-text-white"
+              onClick={() => {
+                this.props.history.push({
+                  pathname: `/Task`,
+                });
+              }}
+            >
+              Tasks
+            </a>
             <a class="navbar-item has-text-white">Timesheets</a>
             <a class="navbar-item has-text-white">Calander</a>
             <a
