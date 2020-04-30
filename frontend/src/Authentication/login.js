@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Cookies from "js-cookie";
 import { withRouter } from "react-router-dom";
-import { Button, Header, Grid, Form } from "semantic-ui-react";
+import { Button, Header, Grid, Form, Dropdown } from "semantic-ui-react";
 import axios from "axios";
 
 import "./login.scss";
@@ -52,7 +52,7 @@ class Login extends Component {
         <div className="container">
           <Grid className="card" style={{ width: "50%" }}>
             <Grid.Column width={16}>
-              <Grid stackable style={{ width: "100%" }}>
+              <Grid stackable style={{ justifyContent: "center" }} >
                 <Grid.Row>
                   <Grid.Column>
                     <Header className="htn">Welcome back!</Header>

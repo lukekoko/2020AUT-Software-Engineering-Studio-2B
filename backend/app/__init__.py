@@ -26,7 +26,7 @@ def shutdown_session(exception=None):
     database.db_session.remove()
 
 
-from app import views, models, auth, chat
+from app import views, models, auth, chat, tasks
 
 def populate_db():
     room = models.ChatRooms(name="General")
