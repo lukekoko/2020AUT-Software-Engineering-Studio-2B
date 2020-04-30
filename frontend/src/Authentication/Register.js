@@ -15,6 +15,7 @@ class Register extends Component {
       password: "",
       RegistrationSuccessful: Boolean,
       userType: 0,
+      registrationMessage: "",
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -64,7 +65,7 @@ class Register extends Component {
           this.props.history.push("/Home");
         },
         (error) => {
-          this.setState({ RegistrationSuccessful: false });
+          this.setState({ registrationMessage: error.response.data.msg, RegistrationSuccessful: false });
         }
       );
   }
@@ -148,8 +149,11 @@ class Register extends Component {
                         </label>
                       </Form.Field>
                       <Form.Field>
-                        <Button className="btn_submit" type="submit"
-                        disabled={this.emptyFields()}>
+                        <Button
+                          className="btn_submit"
+                          type="submit"
+                          disabled={this.emptyFields()}
+                        >
                           Sign Up
                         </Button>
                       </Form.Field>
@@ -167,9 +171,11 @@ class Register extends Component {
                         </p>
                       </Form.Field>
                       <Form.Field>
-                        {this.state.RegistrationSuccessful == false && (
-                          <h1>Registration failed</h1>
-                        )}
+                        <div class="has-text-danger">
+                          {this.state.RegistrationSuccessful == false && (
+                            <h1>{this.state.registrationMessage}</h1>
+                          )}
+                        </div>
                       </Form.Field>
                     </Form>
                   </Grid.Column>

@@ -13,6 +13,7 @@ class Login extends Component {
       email: "",
       password: "",
       loginSuccessful: Boolean,
+      loginMessage: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -41,7 +42,7 @@ class Login extends Component {
           this.props.history.push("/Home");
         },
         (error) => {
-          this.setState({ loginSuccessful: false });
+          this.setState({ loginMessage: error.response.data.msg ,loginSuccessful: false });
         }
       );
   }
@@ -98,7 +99,7 @@ class Login extends Component {
                       </Form.Field>
                       <Form.Field>
                         {this.state.loginSuccessful == false && (
-                          <h1 style={{color:'red'}}>Login failed</h1>
+                          <h1 style={{color:'red'}}>{this.state.loginMessage}</h1>
                         )}
                       </Form.Field>
                     </Form>
