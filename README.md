@@ -28,6 +28,7 @@ On a seperate terminal
 # Docker
 If you want to use docker this is how.
 * change url in chat.js line 49 to "http://backend:5000"
+* change url in package.json line 5 to "http://backend:5000"
 * ensure docker and docker-compose is installed
 * cd into root directory
 * run `docker-compose build`

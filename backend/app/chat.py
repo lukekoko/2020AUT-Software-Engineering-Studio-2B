@@ -99,6 +99,7 @@ def createRoom():
                 user.rooms.append(room)
                 database.db_session.add(user)
             database.db_session.commit()
+            socketio.emit('roomCreated')
             return jsonify({"msg": "Room Created"}), 200
         except Exception as e:
             print(e)
