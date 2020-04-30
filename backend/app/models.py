@@ -1,11 +1,19 @@
 from sqlalchemy import Column, Integer, String, Boolean, Float, DateTime, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from app.database import Base
+from sqlalchemy.dialects.postgresql import ARRAY
+
 
 userTasks = Table('userTasks', Base.metadata,
+                  Column('userId', Integer, ForeignKey('users.id')),
+                  Column('taskId', Integer, ForeignKey('tasks.id'))
+                  )
+
+userRooms = Table('userRooms', Base.metadata,
+    Column('id', Integer, primary_key=True),
     Column('userId', Integer, ForeignKey('users.id')),
-    Column('taskId', Integer, ForeignKey('tasks.id'))
-)
+    Column('roomId', Integer, ForeignKey('ChatRooms.id'))
+ )
 
 class User(Base):
     __tablename__ = 'users'
@@ -18,8 +26,9 @@ class User(Base):
     managerId = Column(Integer, unique=False, nullable=True)
     tasks = relationship("Tasks", secondary=userTasks)
     timesheets = relationship("Timesheet")
+    rooms = relationship("ChatRooms", secondary=userRooms, backref='User')
     messages = relationship("Messages")
-    
+
     def __init__(self, name=None, email=None, password=None, userType=None, hourlyWage=None, managerId=None):
         self.name = name
         self.email = email
@@ -43,19 +52,40 @@ class Timesheet(Base):
         self.date = date
         self.hours = hours
 
+
 class Tasks(Base):
     __tablename__ = 'tasks'
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
+    title = Column(String(150), nullable=False)
     description = Column(String(300), nullable=False)
+    assignerID = Column(Integer, unique=False, nullable=True)
+
+    def __init__(self, name=None, title=None, description=None, assignerID=None ):
+            self.name = name
+            self.title = title
+            self.description = description
+            self.assignerID = assignerID
 
 class Log(Base):
     __tablename__ = 'logs'
     id = Column(Integer, primary_key=True)
     datetime = Column(DateTime, unique=True, nullable=False)
 
+class ChatRooms(Base):
+    __tablename__ = 'ChatRooms'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), unique=True, nullable=False)
+    messages = relationship('Messages')
+    users = relationship('User', secondary=userRooms, backref='ChatRooms')
 
 class Messages(Base):
-    __tablename__ = 'messages'
+    __tablename__ = 'Messages'
     id = Column(Integer, primary_key=True)
     userId = Column(Integer, ForeignKey('users.id'), nullable=False)
+    roomId = Column(Integer, ForeignKey('ChatRooms.id'), nullable=False)
+    time = Column(Integer)
+    message = Column(String(500))
+
+    def __repr__(self):
+        return '<Message %r>' % (self.message)

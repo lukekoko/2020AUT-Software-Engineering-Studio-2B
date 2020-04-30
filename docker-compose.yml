@@ -1,0 +1,22 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/usr/src/app
+    links:
+      - "backend"
+  backend:
+    build: ./backend
+    container_name: backend
+    expose: 
+        - 5000
+    ports:
+        - 5000:5000
+    volumes:
+        - ./backend:/usr/src/app

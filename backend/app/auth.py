@@ -30,14 +30,17 @@ def register():
         pw_hash = bcrypt.generate_password_hash(password).decode("utf-8")
         # store user data in db
         user = models.User(name=name, email=email, password=pw_hash, userType=userType)
-        try:
-            database.db_session.add(user)
-            database.db_session.commit()
-            token = {
-            'access_token': create_access_token(identity={'id': user.id, 'name': user.name, 'email': user.email}),
-            }
-        except:
-            return jsonify({"msg": "Cannot register"}), 401
+        room = models.ChatRooms.query.filter_by(id=1).first()
+
+        user.rooms.append(room)
+        # try:
+        database.db_session.add(user)
+        database.db_session.commit()
+        token = {
+        'access_token': create_access_token(identity={'id': user.id, 'name': user.name, 'email': user.email}),
+        }
+        # except:
+        #     return jsonify({"msg": "Cannot register"}), 401
         return jsonify(token), 200
 
 @app.route('/login', methods=['POST'])

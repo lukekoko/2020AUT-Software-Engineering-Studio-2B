@@ -5,13 +5,28 @@ import { getHeaderToken } from "../Authentication/JwtConfig";
 import io from "socket.io-client";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {
+  Button,
+  Header,
+  Grid,
+  Form,
+  TextArea,
+  Dropdown,
+  Label,
+  Icon,
+} from "semantic-ui-react";
 
+// http://34.87.237.202:5000 for docker
+var url = "http://localhost:5000";
+// var url = "http://34.87.237.202:5000";
 var socket;
 class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
       users: [],
+      selectedUsersForCreatingRoom: [],
+      rooms: [],
       username: Cookies.get("username"),
       userid: Cookies.get("userid"),
       sendMessage: "",
@@ -26,12 +41,16 @@ class Chat extends Component {
     this.connectRoom = this.connectRoom.bind(this);
     this.getUsers = this.getUsers.bind(this);
     this.updateScroll = this.updateScroll.bind(this);
-    // get all users
+    this.getRooms = this.getRooms.bind(this);
+    this.createRoom = this.createRoom.bind(this);
+    this.onSelectChange = this.onSelectChange.bind(this);
+    this.getPreviousMessages = this.getPreviousMessages.bind(this);
   }
 
   componentDidMount() {
     this.getUsers();
-    socket = io("http://localhost:5000", {
+    this.getRooms();
+    socket = io(url, {
       transportOptions: {
         polling: {
           extraHeaders: {
@@ -40,7 +59,7 @@ class Chat extends Component {
         },
       },
     });
-    this.connectSocket();
+    // this.connectSocket();
     this.listen();
   }
 
@@ -67,6 +86,26 @@ class Chat extends Component {
     socket.on("message", (data) => {
       console.log(data);
     });
+
+    socket.on("previousMessage", (data) => {
+      data.map((item) => {
+        this.setState({
+          messages: this.state.messages.concat(item),
+        });
+      });
+      this.updateScroll();
+    });
+
+    socket.on("success", (data) => {
+      if (parseInt(data["userid"]) == parseInt(this.state.userid)) {
+        this.getPreviousMessages();
+      }
+    });
+
+    socket.on("roomCreated", (data) => {
+      // console.log("Room created");
+      this.getRooms();
+    });
   }
 
   getUsers() {
@@ -74,12 +113,58 @@ class Chat extends Component {
       .get("/users", { headers: { Authorization: getHeaderToken() } })
       .then((res) => {
         if (res.data) {
-          this.setState({
-            users: res.data.filter(
+          res.data
+            .filter(
               (user) => parseInt(user.id) !== parseInt(Cookies.get("userid"))
-            ),
+            )
+            .map((item) =>
+              this.setState({
+                users: this.state.users.concat({
+                  key: item.id,
+                  text: item.name,
+                  value: item.id,
+                }),
+              })
+            );
+        }
+      });
+  }
+
+  getRooms() {
+    axios
+      .get("/rooms", { headers: { Authorization: getHeaderToken() } })
+      .then((res) => {
+        if (res.data) {
+          var data = res.data;
+          for (const key of Object.keys(data)) {
+            data[key]["name"] = data[key]["name"].replace(
+              this.state.username + ", ",
+              ""
+            ).replace(
+              ", " + this.state.username, ""
+            );
+          }
+          this.setState({
+            rooms: data,
           });
         }
+      });
+  }
+
+  getPreviousMessages() {
+    axios
+      .post(
+        "/rooms/messages",
+        { room: this.state.room },
+        { headers: { Authorization: getHeaderToken() } }
+      )
+      .then((res) => {
+        res.data.map((item) => {
+          this.setState({
+            messages: this.state.messages.concat(item),
+          });
+        });
+        this.updateScroll();
       });
   }
 
@@ -89,12 +174,19 @@ class Chat extends Component {
     });
   }
 
+  onSelectChange(event, value) {
+    this.setState({
+      selectedUsersForCreatingRoom: value.value,
+    });
+  }
+
   sendMessage(event) {
     if (this.state.sendMessage != "") {
       socket.emit("sendMessage", {
         message: this.state.sendMessage,
         room: this.state.room,
         username: this.state.username,
+        userid: this.state.userid,
         time: new Date().getTime(),
       });
       this.setState({ sendMessage: "" });
@@ -107,24 +199,45 @@ class Chat extends Component {
     element.scrollTop = element.scrollHeight;
   }
 
+  createRoom() {
+    axios
+      .post(
+        "/rooms",
+        {
+          users: this.state.selectedUsersForCreatingRoom,
+        },
+        { headers: { Authorization: getHeaderToken() } }
+      )
+      .then(
+        (res) => {
+          this.getRooms();
+        },
+        (error) => {
+          alert("Create room error", error);
+        }
+      );
+  }
+
   connectRoom(event) {
-    var user = this.state.users.filter(
-      (user) => parseInt(user.id) === parseInt(event.target.value)
-    )[0];
-    // var room = this.state.username + "-" + event.target.value;
-    var room = parseInt(this.state.userid) + parseInt(event.target.value);
     if (this.state.room != "") {
       socket.emit("leave", {
         username: this.state.username,
+        userid: this.state.userid,
         room: this.state.room,
       });
     }
-
-    socket.emit("join", { username: this.state.username, room: room });
+    socket.emit("join", {
+      username: this.state.username,
+      userid: this.state.userid,
+      room: event.target.value,
+    });
+    var room = this.state.rooms.filter(
+      (room) => parseInt(room.id) == parseInt(event.target.value)
+    )[0];
     this.setState({
-      room: room,
+      room: event.target.value,
       messages: [],
-      roomDisplay: user.name,
+      roomDisplay: room.name,
     });
   }
 
@@ -134,14 +247,51 @@ class Chat extends Component {
         <Navbar></Navbar>
         <div class="columns" style={{ padding: "10px" }}>
           <div class="column is-one-fifth">
-            {this.state.users.map((item) => (
-              <div style={{ padding: "10px" }} key={item.email}>
+            <Form onSubmit={this.createRoom}>
+              <div
+                class="columns is-flex is-centered"
+                style={{ padding: "5px" }}
+              >
+                <div class="column">
+                  <Dropdown
+                    placeholder={
+                      this.state.users.length == 0
+                        ? "No users to chat to"
+                        : "Create new chat"
+                    }
+                    multiple
+                    selection
+                    options={this.state.users}
+                    fluid
+                    disabled={this.state.users.length == 0 ? true : false}
+                    onChange={this.onSelectChange}
+                  ></Dropdown>
+                </div>
+                <div class="column">
+                  <Form.Field>
+                    <button
+                      class="button is-dark"
+                      type="submit"
+                      disabled={
+                        this.state.selectedUsersForCreatingRoom.length === 0
+                      }
+                    >
+                      Create new chat
+                    </button>
+                  </Form.Field>
+                </div>
+              </div>
+            </Form>
+
+            {this.state.rooms.map((item) => (
+              <div style={{ padding: "10px" }} key={"chatdiv" + item.id}>
                 <button
-                  id={item.email}
-                  key={item.email}
-                  class="button is-dark is-large is-fullwidth is-rounded"
+                  id={"chatbutton" + item.id}
+                  key={"chatbutton " + item.id}
+                  class="button is-dark is-large is-fullwidth"
                   onClick={this.connectRoom}
                   value={item.id}
+                  disabled={this.state.room == item.id}
                 >
                   {item.name}
                 </button>
@@ -163,6 +313,7 @@ class Chat extends Component {
                 )}
                 {this.state.messages.map((item, i) => (
                   <div key={item.time}>
+                    {new Date(item.time).toLocaleString("en-AU")} -{" "}
                     {item.username}: {item.message}
                   </div>
                 ))}
