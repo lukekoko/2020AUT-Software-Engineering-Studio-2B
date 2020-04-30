@@ -53,14 +53,12 @@ class Tasks(Base):
     title = Column(String(150), nullable=False)
     description = Column(String(300), nullable=False)
     assignerID = Column(Integer, unique=False, nullable=True)
-    assignedIDS= Column(ARRAY(Integer))
 
-    def __init__(self, name=None, title=None, description=None, assignerID=None, assignedIDS=None ):
+    def __init__(self, name=None, title=None, description=None, assignerID=None ):
             self.name = name
             self.title = title
             self.description = description
             self.assignerID = assignerID
-            self.assignedIDS = assignedIDS
 
 class Log(Base):
     __tablename__ = 'logs'

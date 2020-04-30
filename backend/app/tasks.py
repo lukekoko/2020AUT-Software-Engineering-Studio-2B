@@ -17,24 +17,25 @@ def CreateTask():
         if not request.is_json:
             return jsonify({"msg": "Not a proper JSON"}), 400
 
+        print(request.json)
+
         name = request.json.get('name')
         title = request.json.get('title')
-        description = request.get('description')
+        description = request.json.get('description')
         assignerID = request.json.get('assignerID')
-        assignedIDS = request.form.getlist('assignedIDS')
+        assignedIDS = request.json.get('assignedIDS')
 
         print(name, title, description, assignerID, assignedIDS)
 
         # store user data in db
         task = models.Tasks(name=name, title=title, description=description,
-                            assignerID=assignerID, assignedIDS=assignedIDS)
+                            assignerID=assignerID)
 
-        database.db_session.add(task)
-        database.db_session.commit()
         for ID in assignedIDS:
-            print(ID.value)
-            user = models.User.query.filter_by(id=ID.value).first()
+            print(ID['value'])
+            user = models.User.query.filter_by(id=ID['value']).first()
             user.tasks.append(task)
+            database.db_session.add(user)
         database.db_session.commit()  # SA will insert a relationship row
 
         # return jsonify({"msg": "Cannot create Task"}), 401
