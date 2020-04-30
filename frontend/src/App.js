@@ -5,7 +5,7 @@ import Home from './Home';
 import Register from './Authentication/Register';
 import Chat from './chat/chat';
 import CreateTask from './Task/CreateTask';
-import Task from "./Task";
+import Task from "./Task/Task";
 import AuthenticationGuard from './Authentication/AuthenticationGuard';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import 'bulma/css/bulma.css'

@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import Navbar from "./NavBar";
-import "./Task/Home.scss";
-import Cookies from "js-cookie";
+import Navbar from "../NavBar";
+import "./Home.scss";
 import axios from "axios";
-import { getHeaderToken } from "./Authentication/JwtConfig";
+import { getHeaderToken } from "../Authentication/JwtConfig";
 
 export default class Task extends Component {
   constructor(props) {
@@ -18,8 +17,6 @@ export default class Task extends Component {
         this.setState({
           user: res.data,
         });
-        Cookies.set("username", res.data["name"]);
-        Cookies.set("userid", res.data["id"]);
       });
   }
 

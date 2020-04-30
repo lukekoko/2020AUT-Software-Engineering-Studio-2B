@@ -16,10 +16,10 @@ app.config['SECRET_KEY'] = 'secret!'
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# database.init_db()
+database.init_db()
 
 # database.destroy_db() # Remove all tables and data from db
-database.reset_db() # Recreate db
+# database.reset_db() # Recreate db
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -44,4 +44,4 @@ def populate_db():
     database.db_session.add(user)
     database.db_session.commit()
 
-populate_db() # fill db with test user
+# populate_db() # fill db with test user

@@ -30,13 +30,13 @@ def CreateTask():
         # store user data in db
         task = models.Tasks(name=name, title=title, description=description,
                             assignerID=assignerID)
-
-        for ID in assignedIDS:
-            print(ID['value'])
-            user = models.User.query.filter_by(id=ID['value']).first()
-            user.tasks.append(task)
-            database.db_session.add(user)
-        database.db_session.commit()  # SA will insert a relationship row
-
-        # return jsonify({"msg": "Cannot create Task"}), 401
+        try:
+            for ID in assignedIDS:
+                print(ID['value'])
+                user = models.User.query.filter_by(id=ID['value']).first()
+                user.tasks.append(task)
+                database.db_session.add(user)
+            database.db_session.commit()  # SA will insert a relationship row
+        except:
+            return jsonify({"msg": "Cannot create Task"}), 500
         return jsonify({"msg": "Task Created"}), 200
