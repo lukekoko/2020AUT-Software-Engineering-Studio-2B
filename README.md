@@ -42,3 +42,17 @@ If you want to use docker this is how.
 
 ## Errors when trying to push to github
 * Ensure that you have been given access to the github
+
+## Database errors
+* Try to delete the current database file.
+  * stop backend
+  * delete database.db
+  * start backend
+  
+* Alternate: go to __init__.py 
+  * stop backend
+  * comment database.init_db()
+  * uncomment database.reset_db()
+  * uncomment populate_db()
+  * start backend
+  * if works revert the changes above
