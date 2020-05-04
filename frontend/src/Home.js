@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import React, {Component} from "react-beautiful-dnd"; 
+//import React, {Component} from "react-beautiful-dnd"; 
 import axios from "axios";
 import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
