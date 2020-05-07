@@ -8,6 +8,7 @@ import CreateTask from './Task/CreateTask';
 import Task from "./Task/Task";
 import AuthenticationGuard from './Authentication/AuthenticationGuard';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import Calendar1 from './calendar/calendar';
 import 'bulma/css/bulma.css'
 
 
@@ -23,6 +24,8 @@ export default class App extends Component {
         <Switch>
           <Route path={"/login"} component={Login} />
           <Route path={"/Register"} component={Register} />
+          <Route path={"/Calendar"} component={Calendar1} />
+          {/* move to auth guard once i figure out auth */}
           <AuthenticationGuard>
             <Route path={'/Home'} component={Home} />
             <Route path={'/chat'} component={Chat} />
