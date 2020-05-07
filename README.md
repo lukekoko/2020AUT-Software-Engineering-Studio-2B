@@ -34,6 +34,11 @@ If you want to use docker this is how.
 * run `docker-compose build`
 * run `docker-compose up` 
 
+# Bash
+If you want to use bash script to launch project
+* cd into root directory
+* run `bash build.sh`
+
 # Common problems
 ## Errors when pulling new changes or changing branches
 * Try to update packages for both python and react
