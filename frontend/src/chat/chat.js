@@ -5,16 +5,9 @@ import { getHeaderToken } from "../Authentication/JwtConfig";
 import io from "socket.io-client";
 import axios from "axios";
 import Cookies from "js-cookie";
-import {
-  Button,
-  Header,
-  Grid,
-  Form,
-  TextArea,
-  Dropdown,
-  Label,
-  Icon,
-} from "semantic-ui-react";
+import { Form, Dropdown } from "semantic-ui-react";
+import "./chat.scss";
+import foot from "../assets/foot.jpg";
 
 // http://34.87.237.202:5000 for docker
 var url = "http://localhost:5000";
@@ -34,7 +27,6 @@ class Chat extends Component {
       room: "",
       roomDisplay: "",
     };
-    this.connectSocket = this.connectSocket.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.listen = this.listen.bind(this);
@@ -59,20 +51,12 @@ class Chat extends Component {
         },
       },
     });
-    // this.connectSocket();
     this.listen();
   }
 
   componentWillUnmout() {
     console.log("disconnect");
     socket.close();
-  }
-
-  connectSocket() {
-    console.log("username: " + this.state.username);
-    socket.on("connect", function () {
-      console.log("Connected");
-    });
   }
 
   listen() {
@@ -137,12 +121,9 @@ class Chat extends Component {
         if (res.data) {
           var data = res.data;
           for (const key of Object.keys(data)) {
-            data[key]["name"] = data[key]["name"].replace(
-              this.state.username + ", ",
-              ""
-            ).replace(
-              ", " + this.state.username, ""
-            );
+            data[key]["name"] = data[key]["name"]
+              .replace(this.state.username + ", ", "")
+              .replace(", " + this.state.username, "");
           }
           this.setState({
             rooms: data,
@@ -302,23 +283,49 @@ class Chat extends Component {
             <div class="message-header">
               <p>{this.state.roomDisplay}</p>
             </div>
-            <article
-              class="message"
+            <div
               id="messageDiv"
-              style={{ width: "100%", height: "500px", overflow: "auto" }}
+              style={{ width: "100%", height: "1000px", overflow: "auto" }}
             >
               <div class="message-body" style={{}}>
                 {this.state.room === "" && (
                   <p>Click on the buttons on the right to start a chat</p>
                 )}
                 {this.state.messages.map((item, i) => (
-                  <div key={item.time}>
-                    {new Date(item.time).toLocaleString("en-AU")} -{" "}
-                    {item.username}: {item.message}
+                  <div class="columns is-vcentered is-flex is-centered">
+                    <div class="column is-narrow ">
+                      <figure class="image is-64x64">
+                        <img
+                          class="is-rounded"
+                          src={foot}
+                        ></img>
+                      </figure>
+                    </div>
+                    <div class="column">
+                      <article
+                        className={
+                          "message is-small" +
+                          (parseInt(this.state.userid) === parseInt(item.userId)
+                            ? " is-success"
+                            : " is-info")
+                        }
+                        data-tooltip={new Date(item.time).toLocaleString(
+                          "en-AU"
+                        )}
+                        data-position="bottom left"
+                        data-variation="mini"
+                        data-inverted=""
+                      >
+                        <div class="message-header">{item.username}</div>
+                        <div class="message-body">
+                          <span></span> {item.message}
+                        </div>
+                      </article>
+                    </div>
                   </div>
                 ))}
               </div>
-            </article>
+            </div>
           </div>
         </div>
         <div class="columns">
@@ -328,15 +335,16 @@ class Chat extends Component {
               <form onSubmit={this.sendMessage} style={{ width: "100%" }}>
                 <input
                   name="sendMessage"
-                  class="input"
+                  class="input is-rounded"
                   type="text"
-                  style={{ width: "90%" }}
+                  style={{ width: "80%" }}
                   onChange={this.inputChange}
                   value={this.state.sendMessage}
                   disabled={this.state.room === ""}
+                  placeholder="Write something"
                 ></input>
                 <button
-                  class="button is-primary"
+                  class="button is-primary is-rounded"
                   disabled={this.state.room === ""}
                 >
                   Send
