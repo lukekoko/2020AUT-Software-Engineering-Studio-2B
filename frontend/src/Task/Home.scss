@@ -28,3 +28,26 @@
     font-weight: bolder;
     color: white;
 }
+
+.navbar-item {
+    font-weight: bold;
+}
+
+.navbar-item.has-text-white:hover, a.has-text-white:hover  {
+    color: black !important;
+}
+
+@media (max-width: 1024px){
+    .has-text-white {
+        color: black !important;
+    }
+  .navbar-menu {
+    position: absolute;
+    right: 0;
+    top: 70px;
+    display: block;
+  }
+  .navbar-brand {
+    poistion: absolute;
+  }
+}
