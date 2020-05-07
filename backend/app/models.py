@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 from sqlalchemy.dialects.postgresql import ARRAY
 
+import logging
+logger = logging.getLogger(__name__)
 
 userTasks = Table('userTasks', Base.metadata,
                   Column('userId', Integer, ForeignKey('users.id')),

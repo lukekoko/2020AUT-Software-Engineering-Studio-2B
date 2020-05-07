@@ -4,6 +4,9 @@ from app import app, socketio, models, schemas, database
 from flask_jwt_extended import ( jwt_required, get_jwt_identity )
 from collections import deque
 
+import logging
+logger = logging.getLogger(__name__)
+
 messages = []
 
 @socketio.on('connect')
