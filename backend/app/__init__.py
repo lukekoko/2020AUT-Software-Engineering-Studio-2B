@@ -21,7 +21,7 @@ socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
 database.init_db()
 
 # database.destroy_db() # Remove all tables and data from db
-# database.reset_db() # Recreate db
+#database.reset_db() # Recreate db
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
