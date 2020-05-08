@@ -31,6 +31,14 @@ class User(Base):
     def __repr__(self):
         return '<User %r>' % (self.name)
 
+class Team(Base):
+    __tablename__ = 'teams'
+    id = Column(Integer, primary_key=True)
+    userId = Column(Integer, ForeignKey('users.id'), nullable=False)
+    name = Column(String(50), nullable=False)
+    leaderId = Column(Integer, nullable=False)
+    tasks = Column(Integer, ForeignKey('tasks.id'))
+
 class Timesheet(Base):
     __tablename__ = 'timesheets'
     id = Column(Integer, primary_key=True)
