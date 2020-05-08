@@ -15,7 +15,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 database.init_db()
 
 # database.destroy_db() # Remove all tables and data from db
-# database.reset_db() # Recreate db
+#database.reset_db() # Recreate db
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

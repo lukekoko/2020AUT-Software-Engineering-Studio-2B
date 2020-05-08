@@ -32,3 +32,39 @@ def getUsers():
     users = models.User.query.with_entities(models.User.id, models.User.name, models.User.email, models.User.userType).all()
     print(users)
     return jsonify([userSchema.from_orm(user).dict() for user in users])
+
+@app.route('/teams', methods=['GET'])
+@jwt_required
+def getTeams():
+    teamSchema = schemas.TeamSchema
+    teams = models.Team.query.with_entities(models.Team.id, models.Team.name).all()
+    if (teams.__len__() == 0):
+      teams = [createFakeTeam1(), createFakeTeam2(), createFakeTeam3()]
+      print("ADDED FAKE TEAMS")
+
+    print(teams)
+    return jsonify([teamSchema.from_orm(team).dict() for team in teams])
+
+def createFakeTeam1():
+  team = models.Team()
+  team.id = 1
+  team.name = "Team One"
+  team.leaderId = 1234
+  print(team.id, team.name, team.leaderId)
+  return team
+
+def createFakeTeam2():
+  team = models.Team()
+  team.id = 2
+  team.name = "Team Two"
+  team.leaderId = 321
+  print(team.id, team.name, team.leaderId)
+  return team
+
+def createFakeTeam3():
+  team = models.Team()
+  team.id = 3
+  team.name = "Team Three"
+  team.leaderId = 5467
+  print(team.id, team.name, team.leaderId)
+  return team
