@@ -69,7 +69,9 @@ export default class Task extends Component {
               <div>
                 <h1 class="title">Tasks Page</h1>
                 <div>{this.displayTasks()}</div>
-                
+                {this.state.tasks.length == 0
+                        ? "No Tasks"
+                        : "Meme"}
               </div>
             </div>
           </section>
