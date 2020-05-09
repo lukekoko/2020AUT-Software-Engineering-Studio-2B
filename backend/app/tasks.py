@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
-
 @app.route('/createTask', methods=['POST'])
 def CreateTask():
     if request.method == 'POST':
@@ -43,3 +42,25 @@ def CreateTask():
         except:
             return jsonify({"msg": "Cannot create Task"}), 500
         return jsonify({"msg": "Task Created"}), 200
+
+@app.route("/getTasks", methods=['POST'])
+def getTasks():
+    if request.method == 'POST':
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper POST REQUEST"}), 400
+    
+        requestUserId = request.json.get('requestUserId')
+
+        query = database.db_session.query(models.userTasks).filter(models.userTasks.c.userId == requestUserId).all()
+
+        tasks = list()
+        for userTask in query:
+            dbtask = database.db_session.query(models.Tasks).filter(models.Tasks.id == userTask.taskId).first()
+            tasks.append({
+            'id': dbtask.id,
+            'name': dbtask.name,
+            'title': dbtask.title,
+            'description': dbtask.description,
+            'assignerID': dbtask.assignerID,
+            })
+        return jsonify(tasks)
