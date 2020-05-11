@@ -16,7 +16,24 @@ export default class Home extends Component {
           teams: res.data,
         });
         console.log(this.state.teams);
+        //this.handlePopulateDatabase();
       });
+
+    this.handlePopulateDatabase = this.handlePopulateDatabase.bind(this);
+  }
+
+  handlePopulateDatabase() {
+    axios
+      .post("/addTeams", {
+        name: 'Team 2',
+        leaderId: 321,
+      })
+      .then(
+        (res) => {
+        },
+        (error) => {
+        }
+      );
   }
 
   render() {
@@ -43,12 +60,12 @@ export default class Home extends Component {
                         <td>Leader #1</td>
                       </tr>
                       <tr>
-                        <th scope="row">{this.state.teams[1].name}</th>
+                        <th scope="row">{this.state.teams[0].name}</th>
                         <td>12</td>
                         <td>Leader #2</td>
                       </tr>
                       <tr>
-                        <th scope="row">{this.state.teams[2].name}</th>
+                        <th scope="row">{this.state.teams[0].name}</th>
                         <td>3</td>
                         <td>Leader #2</td>
                       </tr>

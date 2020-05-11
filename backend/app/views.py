@@ -1,8 +1,9 @@
 from app import app, models, schemas, database
-from flask import jsonify
+from flask import jsonify, request
 from typing import List
 from flask_jwt_extended import (
-    JWTManager, jwt_required, get_jwt_identity
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity, jwt_refresh_token_required, create_refresh_token
 )
 
 @app.route('/')
@@ -37,34 +38,30 @@ def getUsers():
 @jwt_required
 def getTeams():
     teamSchema = schemas.TeamSchema
-    teams = models.Team.query.with_entities(models.Team.id, models.Team.name).all()
-    if (teams.__len__() == 0):
-      teams = [createFakeTeam1(), createFakeTeam2(), createFakeTeam3()]
-      print("ADDED FAKE TEAMS")
+    teams = models.Team.query.with_entities(models.Team.id, models.Team.name, models.Team.leaderId).all()
 
     print(teams)
     return jsonify([teamSchema.from_orm(team).dict() for team in teams])
 
-def createFakeTeam1():
-  team = models.Team()
-  team.id = 1
-  team.name = "Team One"
-  team.leaderId = 1234
-  print(team.id, team.name, team.leaderId)
-  return team
+# Post call to add teams to database
+@app.route('/addTeams', methods=['POST'])
+def addTeam():
+    if request.method == 'POST':
+        # get request data; name email password
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper JSON"}), 400
+        name = request.json.get('name')
+        leaderId = request.json.get('leaderId')
+        
+        team = models.Team(name=name, leaderId=leaderId)
+        try:
+            database.db_session.add(team)
+            database.db_session.commit()
 
-def createFakeTeam2():
-  team = models.Team()
-  team.id = 2
-  team.name = "Team Two"
-  team.leaderId = 321
-  print(team.id, team.name, team.leaderId)
-  return team
-
-def createFakeTeam3():
-  team = models.Team()
-  team.id = 3
-  team.name = "Team Three"
-  team.leaderId = 5467
-  print(team.id, team.name, team.leaderId)
-  return team
+            token = {
+            'access_token': create_access_token(identity={'id': team.id, 'name': team.name, 'leaderId': team.leaderId}),
+            }
+        except Exception as e:
+            print(e)
+            return jsonify({"msg": "Cannot add team"}), 401
+        return jsonify(token), 200
