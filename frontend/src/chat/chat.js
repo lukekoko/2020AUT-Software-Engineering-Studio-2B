@@ -306,7 +306,7 @@ class Chat extends Component {
                   </a>
                   <a
                     class="button is-text is-small"
-                    onClick={() => this.deleteMessage(item.id)}
+                    onClick={() => {if (window.confirm("Do you want to Delete?")) this.deleteMessage(item.id)}}
                   >
                     <span class="icon">
                       <i class="fas fa-trash"></i>

@@ -146,3 +146,15 @@ def getUsersThatAreNotInRoomsTogether():
     userSchema = schemas.UserSchema
     users = models.User.query.with_entities(models.User.id, models.User.name, models.User.email).all()
     return jsonify([userSchema.from_orm(user).dict() for user in users])
+
+
+@app.route('/rooms/messages/delete', methods=['POST'])
+@jwt_required
+def deleteMessage():
+    print('delete')
+
+
+@app.route('/rooms/messages/edit', methods=['POST'])
+@jwt_required
+def editmessage():
+    print('edit')
