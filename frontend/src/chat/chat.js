@@ -26,6 +26,8 @@ class Chat extends Component {
       messages: [],
       room: "",
       roomDisplay: "",
+      modelActivate: {},
+      editingMessage: ''
     };
     this.inputChange = this.inputChange.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -37,6 +39,10 @@ class Chat extends Component {
     this.createRoom = this.createRoom.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.getPreviousMessages = this.getPreviousMessages.bind(this);
+    this.editMessage = this.editMessage.bind(this);
+    this.deleteMessage = this.deleteMessage.bind(this);
+    this.enableEditInput = this.enableEditInput.bind(this);
+    this.editMessageOnChange = this.editMessageOnChange.bind(this);
   }
 
   componentDidMount() {
@@ -73,8 +79,11 @@ class Chat extends Component {
 
     socket.on("previousMessage", (data) => {
       data.map((item) => {
+        let newModelActivate = { ...this.state.modelActivate };
+        newModelActivate[item.id] = false;
         this.setState({
           messages: this.state.messages.concat(item),
+          modelActivate: newModelActivate,
         });
       });
       this.updateScroll();
@@ -87,7 +96,6 @@ class Chat extends Component {
     });
 
     socket.on("roomCreated", (data) => {
-      // console.log("Room created");
       this.getRooms();
     });
   }
@@ -141,8 +149,11 @@ class Chat extends Component {
       )
       .then((res) => {
         res.data.map((item) => {
+          let newModelActivate = { ...this.state.modelActivate };
+          newModelActivate[item.id] = false;
           this.setState({
             messages: this.state.messages.concat(item),
+            modelActivate: newModelActivate,
           });
         });
         this.updateScroll();
@@ -174,6 +185,38 @@ class Chat extends Component {
     }
     event.preventDefault();
   }
+
+  deleteMessage(id) {
+    console.log("delete", id);
+  }
+
+  editMessage(event, editBool, id) {
+    if (editBool) {
+      console.log(id, this.state.editingMessage);
+      this.enableEditInput(id, false, 'none');
+    }
+
+    event.preventDefault();
+  }
+  
+  enableEditInput(id, bool, message) {
+    if (bool){
+      this.setState({editingMessage: message});
+    }
+    let editedModelActivate = { ...this.state.modelActivate };
+    // for (var key in editedModelActivate) {
+    //   editedModelActivate[key] = false;
+    // }
+    editedModelActivate[id] = !editedModelActivate[id];
+    this.setState({ modelActivate: editedModelActivate });
+  }
+
+  editMessageOnChange(event) {
+    this.setState({
+      editingMessage: event.target.value
+    });
+  }
+
 
   updateScroll() {
     var element = document.getElementById("messageDiv");
@@ -221,6 +264,93 @@ class Chat extends Component {
       roomDisplay: room.name,
     });
   }
+
+  displayMessages = () =>
+    this.state.messages.map((item, i) => (
+      <div class="columns is-vcentered is-flex is-centered">
+        <div class="column is-narrow">
+          <figure
+            class="image is-64x64"
+            data-tooltip={item.username}
+            data-position="right center"
+            data-variation="mini"
+            data-inverted=""
+          >
+            <img class="is-rounded" src={foot}></img>
+          </figure>
+        </div>
+        <div class="column">
+          <article
+            className={
+              "message is-small" +
+              (parseInt(this.state.userid) === parseInt(item.userId)
+                ? " is-success"
+                : " is-light")
+            }
+            data-tooltip={new Date(item.time).toLocaleString("en-AU")}
+            data-position="bottom left"
+            data-variation="mini"
+            data-inverted=""
+          >
+            <div class="message-header has-text-black">
+              <p>{item.username}</p>
+              {parseInt(this.state.userid) === parseInt(item.userId) && (
+                <div>
+                  <a
+                    class="button is-text is-small"
+                    onClick={() => this.enableEditInput(item.id, true, item.message)}
+                  >
+                    <span class="icon">
+                      <i class="fas fa-edit"></i>
+                    </span>
+                  </a>
+                  <a
+                    class="button is-text is-small"
+                    onClick={() => this.deleteMessage(item.id)}
+                  >
+                    <span class="icon">
+                      <i class="fas fa-trash"></i>
+                    </span>
+                  </a>
+                </div>
+              )}
+            </div>
+            <div class="message-body has-text-black">
+              {this.state.modelActivate[item.id] ? (
+                <form
+                  onSubmit={(e) => {
+                    if (window.confirm("Do you want to edit?"))
+                      this.editMessage(e, true, item.id);
+                    else this.editMessage(e, false, item.id);
+                  }}
+                  style={{ width: "100%" }}
+                >
+                  <div class="field has-addons">
+                    <p class="control is-expanded">
+                      <input
+                        name={"editMessage" + item.id}
+                        class="input is-rounded"
+                        type="text"
+                        onChange={(e) => this.editMessageOnChange(e)}
+                        value={this.state.editingMessage}
+                        disabled={this.state.room === ""}
+                      />
+                    </p>
+                    <p class="control">
+                      <button class="button is-danger is-rounded" type="submit">
+                        Edit
+                      </button>
+                    </p>
+                  </div>
+                </form>
+              ) : (
+                <span>{item.message}</span>
+              )}
+            </div>
+          </article>
+        </div>
+      </div>
+    ));
 
   render() {
     return (
@@ -291,39 +421,7 @@ class Chat extends Component {
                 {this.state.room === "" && (
                   <p>Click on the buttons on the right to start a chat</p>
                 )}
-                {this.state.messages.map((item, i) => (
-                  <div class="columns is-vcentered is-flex is-centered">
-                    <div class="column is-narrow ">
-                      <figure class="image is-64x64">
-                        <img
-                          class="is-rounded"
-                          src={foot}
-                        ></img>
-                      </figure>
-                    </div>
-                    <div class="column">
-                      <article
-                        className={
-                          "message is-small" +
-                          (parseInt(this.state.userid) === parseInt(item.userId)
-                            ? " is-success"
-                            : " is-info")
-                        }
-                        data-tooltip={new Date(item.time).toLocaleString(
-                          "en-AU"
-                        )}
-                        data-position="bottom left"
-                        data-variation="mini"
-                        data-inverted=""
-                      >
-                        <div class="message-header">{item.username}</div>
-                        <div class="message-body">
-                          <span></span> {item.message}
-                        </div>
-                      </article>
-                    </div>
-                  </div>
-                ))}
+                {this.displayMessages()}
               </div>
             </div>
           </div>
