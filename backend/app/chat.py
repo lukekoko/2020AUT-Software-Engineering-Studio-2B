@@ -23,7 +23,7 @@ def disconnect():
 def handle_message(message):
     messages.append(message);
     emit('sentMessage', {'data': messages})
-
+ 
 @socketio.on('join')
 @jwt_required
 def on_join(data):

@@ -61,7 +61,7 @@ class NavBar extends Component {
                     });
                   }}
                 >
-                  View tasks
+                  View created tasks
                 </a>
                 <a
                   class="navbar-item"
