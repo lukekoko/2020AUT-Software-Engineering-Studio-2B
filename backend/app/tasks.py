@@ -7,6 +7,9 @@ from flask_jwt_extended import (
     get_jwt_identity, jwt_refresh_token_required, create_refresh_token
 )
 
+import logging
+logger = logging.getLogger(__name__)
+
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
@@ -32,11 +35,31 @@ def CreateTask():
                             assignerID=assignerID)
         try:
             for ID in assignedIDS:
-                print(ID['value'])
-                user = models.User.query.filter_by(id=ID['value']).first()
+                print(ID)
+                user = models.User.query.filter_by(id=ID).first()
                 user.tasks.append(task)
                 database.db_session.add(user)
             database.db_session.commit()  # SA will insert a relationship row
         except:
             return jsonify({"msg": "Cannot create Task"}), 500
         return jsonify({"msg": "Task Created"}), 200
+
+
+@app.route("/getCreatedTasks", methods=['POST'])
+def getCreatedTasks():
+    if request.method == 'POST':
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper POST REQUEST"}), 400
+
+        requestUserId = request.json.get('requestUserId')
+        query = database.db_session.query(models.Tasks).filter(models.Tasks.assignerID == requestUserId).all()
+        tasks = list()
+        for createdTask in query:
+            tasks.append({
+                'id': createdTask.id,
+                'name': createdTask.name,
+                'title': createdTask.title,
+                'description': createdTask.description,
+                'assignerID': createdTask.assignerID,
+            })
+        return jsonify(tasks)

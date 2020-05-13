@@ -4,6 +4,19 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_socketio import SocketIO
 
+import pathlib
+logPath = str(pathlib.Path(__file__).resolve().parent) + './config/logger.ini'
+
+from pathlib import Path
+Path("./logs/").mkdir(parents=True, exist_ok=True)
+
+import logging.config
+
+logging.config.fileConfig(
+    logPath, disable_existing_loggers=False
+)
+logger = logging.getLogger(__name__)
+
 from app import database
 
 app = Flask(__name__)
@@ -16,10 +29,10 @@ app.config['SECRET_KEY'] = 'secret!'
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-database.init_db()
+# database.init_db()
 
 # database.destroy_db() # Remove all tables and data from db
-# database.reset_db() # Recreate db
+database.reset_db() # Recreate db
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -44,4 +57,4 @@ def populate_db():
     database.db_session.add(user)
     database.db_session.commit()
 
-# populate_db() # fill db with test user
+populate_db() # fill db with test user
