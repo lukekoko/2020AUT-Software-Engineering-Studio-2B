@@ -48,7 +48,7 @@ def message(data):
     # store message in db
     user = models.User.query.filter_by(id=data['userid']).first()
     room = models.ChatRooms.query.filter_by(id=data['room']).first()
-    message = models.Messages(time=data['time'], message=data['message'])
+    message = models.Messages(time=data['time'], message=data['message'], removed=False, edited=False)
 
     room.messages.append(message)
     user.messages.append(message)
@@ -62,7 +62,9 @@ def message(data):
         'roomId': message.roomId,
         'username': user.name,
         'time': message.time,
-        'message': message.message
+        'message': message.message,
+        'removed': message.removed,
+        'edited': message.edited
     }
     emit('roomMessage', sendMessage, room=data['room'])
 
@@ -105,7 +107,6 @@ def createRoom():
             socketio.emit('roomCreated')
             return jsonify({"msg": "Room Created"}), 200
         except Exception as e:
-            print(e)
             return jsonify({"msg": "error"}), 400
     return jsonify({"msg": "error"}), 400
 
@@ -135,7 +136,9 @@ def getRoomMessages():
             'roomId': message[0].roomId,
             'username': message[1].name,
             'time': message[0].time,
-            'message': message[0].message
+            'message': message[0].message,
+            'removed': message[0].removed,
+            'edited': message[0].edited
         })
     return jsonify(previousMessages), 200
 
@@ -151,10 +154,28 @@ def getUsersThatAreNotInRoomsTogether():
 @app.route('/rooms/messages/delete', methods=['POST'])
 @jwt_required
 def deleteMessage():
-    print('delete')
+    id = request.json['id']
+    message = models.Messages.query.filter_by(id=id).first()
+    try:
+        message.message = "Removed"
+        message.removed = True
+        database.db_session.commit()
+        socketio.emit('success', {'userid': request.json['userId'] }, room=request.json['room'])
+    except:
+        return jsonify({"msg": "error"}), 400
+    return jsonify({"msg": "Message deleted"}), 200
 
 
 @app.route('/rooms/messages/edit', methods=['POST'])
 @jwt_required
 def editmessage():
-    print('edit')
+    id = request.json['id']
+    message = models.Messages.query.filter_by(id=id).first()
+    try:
+        message.message = request.json['message']
+        message.edited = True
+        database.db_session.commit()
+        socketio.emit('success', {'userid': request.json['userId'] }, room=request.json['room'])
+    except:
+        return jsonify({"msg": "error"}), 400
+    return jsonify({"msg": "Message edited"}), 200

@@ -27,7 +27,7 @@ class Chat extends Component {
       room: "",
       roomDisplay: "",
       modelActivate: {},
-      editingMessage: ''
+      editingMessage: "",
     };
     this.inputChange = this.inputChange.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -148,6 +148,7 @@ class Chat extends Component {
         { headers: { Authorization: getHeaderToken() } }
       )
       .then((res) => {
+        this.setState({ messages: [] });
         res.data.map((item) => {
           let newModelActivate = { ...this.state.modelActivate };
           newModelActivate[item.id] = false;
@@ -188,35 +189,69 @@ class Chat extends Component {
 
   deleteMessage(id) {
     console.log("delete", id);
+    axios
+      .post(
+        "/rooms/messages/delete",
+        { id: id, room: this.state.room, userId: this.state.userid },
+        {
+          headers: { Authorization: getHeaderToken() },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      });
   }
 
   editMessage(event, editBool, id) {
     if (editBool) {
-      console.log(id, this.state.editingMessage);
-      this.enableEditInput(id, false, 'none');
+      // clear edit message dict
+      axios
+        .post(
+          "/rooms/messages/edit",
+          {
+            id: id,
+            room: this.state.room,
+            userId: this.state.userid,
+            message: this.state.editingMessage,
+          },
+          {
+            headers: { Authorization: getHeaderToken() },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        });
+
+      this.enableEditInput(id, false, "none");
     }
 
     event.preventDefault();
   }
-  
+
   enableEditInput(id, bool, message) {
-    if (bool){
-      this.setState({editingMessage: message});
+    let toggle = false;
+    if (bool) {
+      this.setState({ editingMessage: message });
     }
     let editedModelActivate = { ...this.state.modelActivate };
-    // for (var key in editedModelActivate) {
-    //   editedModelActivate[key] = false;
-    // }
-    editedModelActivate[id] = !editedModelActivate[id];
+    for (var key in editedModelActivate) {
+      if (parseInt(key) !== parseInt(id)) {
+        editedModelActivate[key] = false;
+      }
+    }
+    if (editedModelActivate[id]) {
+      editedModelActivate[id] = false;
+    } else {
+      editedModelActivate[id] = true;
+    }
     this.setState({ modelActivate: editedModelActivate });
   }
 
-  editMessageOnChange(event) {
+  editMessageOnChange(event, id) {
     this.setState({
-      editingMessage: event.target.value
+      editingMessage: event.target.value,
     });
   }
-
 
   updateScroll() {
     var element = document.getElementById("messageDiv");
@@ -237,7 +272,7 @@ class Chat extends Component {
           this.getRooms();
         },
         (error) => {
-          alert("Create room error", error);
+          alert("Room with these users is already created", error);
         }
       );
   }
@@ -282,10 +317,11 @@ class Chat extends Component {
         <div class="column">
           <article
             className={
-              "message is-small" +
+              "message is-small " +
+              (item.removed === true ? " is-danger" : "") +
               (parseInt(this.state.userid) === parseInt(item.userId)
                 ? " is-success"
-                : " is-light")
+                : " is-info")
             }
             data-tooltip={new Date(item.time).toLocaleString("en-AU")}
             data-position="bottom left"
@@ -293,27 +329,36 @@ class Chat extends Component {
             data-inverted=""
           >
             <div class="message-header has-text-black">
-              <p>{item.username}</p>
-              {parseInt(this.state.userid) === parseInt(item.userId) && (
-                <div>
-                  <a
-                    class="button is-text is-small"
-                    onClick={() => this.enableEditInput(item.id, true, item.message)}
-                  >
-                    <span class="icon">
-                      <i class="fas fa-edit"></i>
-                    </span>
-                  </a>
-                  <a
-                    class="button is-text is-small"
-                    onClick={() => {if (window.confirm("Do you want to Delete?")) this.deleteMessage(item.id)}}
-                  >
-                    <span class="icon">
-                      <i class="fas fa-trash"></i>
-                    </span>
-                  </a>
-                </div>
-              )}
+              <p>
+                {item.username} {item.edited === true && "<edited>"}
+              </p>
+
+              {parseInt(this.state.userid) === parseInt(item.userId) &&
+                !item.removed && (
+                  <div>
+                    <a
+                      class="button is-text is-small"
+                      onClick={() =>
+                        this.enableEditInput(item.id, true, item.message)
+                      }
+                    >
+                      <span class="icon">
+                        <i class="fas fa-edit"></i>
+                      </span>
+                    </a>
+                    <a
+                      class="button is-text is-small"
+                      onClick={() => {
+                        if (window.confirm("Do you want to Delete?"))
+                          this.deleteMessage(item.id);
+                      }}
+                    >
+                      <span class="icon">
+                        <i class="fas fa-trash"></i>
+                      </span>
+                    </a>
+                  </div>
+                )}
             </div>
             <div class="message-body has-text-black">
               {this.state.modelActivate[item.id] ? (
@@ -324,6 +369,7 @@ class Chat extends Component {
                     else this.editMessage(e, false, item.id);
                   }}
                   style={{ width: "100%" }}
+                  // onBlur={() => this.enableEditInput(item.id, false, '')}
                 >
                   <div class="field has-addons">
                     <p class="control is-expanded">
@@ -331,7 +377,7 @@ class Chat extends Component {
                         name={"editMessage" + item.id}
                         class="input is-rounded"
                         type="text"
-                        onChange={(e) => this.editMessageOnChange(e)}
+                        onChange={(e) => this.editMessageOnChange(e, item.id)}
                         value={this.state.editingMessage}
                         disabled={this.state.room === ""}
                       />
@@ -421,6 +467,7 @@ class Chat extends Component {
                 {this.state.room === "" && (
                   <p>Click on the buttons on the right to start a chat</p>
                 )}
+                {this.state.messages.length === 0 && this.state.room !== '' && <span>No Messages</span>}
                 {this.displayMessages()}
               </div>
             </div>

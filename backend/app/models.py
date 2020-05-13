@@ -86,8 +86,10 @@ class Messages(Base):
     id = Column(Integer, primary_key=True)
     userId = Column(Integer, ForeignKey('users.id'), nullable=False)
     roomId = Column(Integer, ForeignKey('ChatRooms.id'), nullable=False)
-    time = Column(Integer)
-    message = Column(String(500))
+    time = Column(Integer, nullable=False)
+    message = Column(String())
+    removed = Column(Boolean, nullable=False)
+    edited = Column(Boolean, nullable=False)
 
     def __repr__(self):
         return '<Message %r>' % (self.message)
