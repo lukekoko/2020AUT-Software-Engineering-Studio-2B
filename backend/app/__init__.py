@@ -42,7 +42,7 @@ def shutdown_session(exception=None):
 from app import views, models, auth, chat, tasks
 
 def populate_db():
-    room = models.ChatRooms(name="General")
+    room = models.ChatRooms(name="General", roomName="General")
     user = models.User(name="test", email="test@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
     user.rooms.append(room)
     database.db_session.add(user)

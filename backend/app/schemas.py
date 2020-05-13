@@ -14,6 +14,7 @@ class UserSchema(BaseModel):
 class RoomSchema(BaseModel):
     id: int
     name: str
+    roomName: str
 
     class Config:
         orm_mode = True

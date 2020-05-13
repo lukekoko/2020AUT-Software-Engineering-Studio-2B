@@ -129,8 +129,9 @@ class Chat extends Component {
       .then((res) => {
         if (res.data) {
           var data = res.data;
+          console.log(data);
           for (const key of Object.keys(data)) {
-            data[key]["name"] = data[key]["name"]
+            data[key]["roomName"] = data[key]["roomName"]
               .replace(this.state.username + ", ", "")
               .replace(", " + this.state.username, "");
           }
@@ -311,6 +312,7 @@ class Chat extends Component {
       )
       .then((res) => {
         console.log(res);
+        this.setState({ room: "", roomDisplay: "" });
         this.getRooms();
       });
   }
@@ -465,7 +467,7 @@ class Chat extends Component {
                   value={item.id}
                   disabled={this.state.room == item.id}
                 >
-                  {item.name}
+                  {item.roomName}
                 </button>
               </div>
             ))}
@@ -473,8 +475,15 @@ class Chat extends Component {
           <div class="column">
             <div class="message-header">
               <p>{this.state.roomDisplay}</p>
-              {this.state.roomDisplay !== "" && this.state.room !== '1' && (
+              {this.state.roomDisplay !== "" && this.state.room !== "1" && (
                 <div>
+                  <a
+                    class="button is-text is-small"
+                  >
+                    <span class="icon has-text-light">
+                      <i class="fas fa-edit"></i>
+                    </span>
+                  </a>
                   <a
                     class="button is-text is-small"
                     onClick={() => {

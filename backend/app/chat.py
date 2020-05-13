@@ -98,7 +98,7 @@ def createRoom():
         roomname = ', '.join(userNames)
         # adding room to users
         try:
-            room = models.ChatRooms(name=roomname)
+            room = models.ChatRooms(name=roomname, roomName=roomname)
             # add rooms to users
             for user in filteredUsers:
                 user.rooms.append(room)

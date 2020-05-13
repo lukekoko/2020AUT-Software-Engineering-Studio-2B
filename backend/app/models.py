@@ -78,6 +78,7 @@ class ChatRooms(Base):
     __tablename__ = 'ChatRooms'
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
+    roomName = Column(String(100), nullable=False)
     messages = relationship('Messages')
     users = relationship('User', secondary=userRooms, back_populates='rooms')
 
