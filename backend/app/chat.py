@@ -179,3 +179,16 @@ def editmessage():
     except:
         return jsonify({"msg": "error"}), 400
     return jsonify({"msg": "Message edited"}), 200
+
+@app.route('/rooms/delete', methods=['POST'])
+@jwt_required
+def deleteRoom():
+    id = request.json['roomid']
+    room = models.ChatRooms.query.filter_by(id=id).first()
+    print(room)
+    # try:
+    database.db_session.delete(room)
+    database.db_session.commit()
+    # except:
+        # return jsonify({"msg": "error"}), 400
+    return jsonify({"msg": "Message deleted"}), 200

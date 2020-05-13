@@ -28,7 +28,7 @@ class User(Base):
     managerId = Column(Integer, unique=False, nullable=True)
     tasks = relationship("Tasks", secondary=userTasks)
     timesheets = relationship("Timesheet")
-    rooms = relationship("ChatRooms", secondary=userRooms, backref='User')
+    rooms = relationship("ChatRooms", secondary=userRooms, back_populates='users')
     messages = relationship("Messages")
 
     def __init__(self, name=None, email=None, password=None, userType=None, hourlyWage=None, managerId=None):
@@ -79,7 +79,7 @@ class ChatRooms(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
     messages = relationship('Messages')
-    users = relationship('User', secondary=userRooms, backref='ChatRooms')
+    users = relationship('User', secondary=userRooms, back_populates='rooms')
 
 class Messages(Base):
     __tablename__ = 'Messages'

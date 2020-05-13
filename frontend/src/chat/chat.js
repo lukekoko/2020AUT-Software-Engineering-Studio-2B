@@ -43,6 +43,7 @@ class Chat extends Component {
     this.deleteMessage = this.deleteMessage.bind(this);
     this.enableEditInput = this.enableEditInput.bind(this);
     this.editMessageOnChange = this.editMessageOnChange.bind(this);
+    this.deleteRoom = this.deleteRoom.bind(this);
   }
 
   componentDidMount() {
@@ -188,7 +189,6 @@ class Chat extends Component {
   }
 
   deleteMessage(id) {
-    console.log("delete", id);
     axios
       .post(
         "/rooms/messages/delete",
@@ -298,6 +298,21 @@ class Chat extends Component {
       messages: [],
       roomDisplay: room.name,
     });
+  }
+
+  deleteRoom() {
+    axios
+      .post(
+        "/rooms/delete",
+        { roomid: this.state.room, userId: this.state.userid },
+        {
+          headers: { Authorization: getHeaderToken() },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        this.getRooms();
+      });
   }
 
   displayMessages = () =>
@@ -458,16 +473,34 @@ class Chat extends Component {
           <div class="column">
             <div class="message-header">
               <p>{this.state.roomDisplay}</p>
+              {this.state.roomDisplay !== "" && this.state.room !== '1' && (
+                <div>
+                  <a
+                    class="button is-text is-small"
+                    onClick={() => {
+                      if (window.confirm("Do you want to Delete?"))
+                        this.deleteRoom();
+                    }}
+                  >
+                    <span class="icon has-text-light">
+                      <i class="fas fa-trash"></i>
+                    </span>
+                  </a>
+                </div>
+              )}
             </div>
             <div
               id="messageDiv"
+              class="message-body"
               style={{ width: "100%", height: "1000px", overflow: "auto" }}
             >
               <div class="message-body" style={{}}>
                 {this.state.room === "" && (
                   <p>Click on the buttons on the right to start a chat</p>
                 )}
-                {this.state.messages.length === 0 && this.state.room !== '' && <span>No Messages</span>}
+                {this.state.messages.length === 0 && this.state.room !== "" && (
+                  <span>No Messages</span>
+                )}
                 {this.displayMessages()}
               </div>
             </div>
