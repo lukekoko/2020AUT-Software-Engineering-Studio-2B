@@ -7,6 +7,9 @@ from flask_jwt_extended import (
     get_jwt_identity, jwt_refresh_token_required, create_refresh_token
 )
 
+import logging
+logger = logging.getLogger(__name__)
+
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
@@ -33,15 +36,16 @@ def register():
         room = models.ChatRooms.query.filter_by(id=1).first()
 
         user.rooms.append(room)
-        # try:
-        database.db_session.add(user)
-        database.db_session.commit()
-        token = {
-        'access_token': create_access_token(identity={'id': user.id, 'name': user.name, 'email': user.email}),
-        }
-        # except:
-        #     return jsonify({"msg": "Cannot register"}), 401
+        try:
+            database.db_session.add(user)
+            database.db_session.commit()
+            token = {
+            'access_token': create_access_token(identity={'id': user.id, 'name': user.name, 'email': user.email}),
+            }
+        except:
+            return jsonify({"msg": "User with email already registered"}), 400
         return jsonify(token), 200
+    return jsonify({"msg": "Not a proper JSON"}), 500
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -60,7 +64,7 @@ def login():
         user = models.User.query.filter_by(email=email).first()
         if (user is None):
             return jsonify({"msg": "Wrong username or password"}), 401
-        # # check if password is correct
+        # check if password is correct
         if (bcrypt.check_password_hash(user.password, password)):
             # create jwt token and send
             access_token = create_access_token(identity=user.name)

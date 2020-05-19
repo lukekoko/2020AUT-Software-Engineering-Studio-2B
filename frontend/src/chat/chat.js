@@ -5,16 +5,9 @@ import { getHeaderToken } from "../Authentication/JwtConfig";
 import io from "socket.io-client";
 import axios from "axios";
 import Cookies from "js-cookie";
-import {
-  Button,
-  Header,
-  Grid,
-  Form,
-  TextArea,
-  Dropdown,
-  Label,
-  Icon,
-} from "semantic-ui-react";
+import { Form, Dropdown } from "semantic-ui-react";
+import "./chat.scss";
+import foot from "../assets/foot.jpg";
 
 // http://34.87.237.202:5000 for docker
 var url = "http://localhost:5000";
@@ -33,8 +26,9 @@ class Chat extends Component {
       messages: [],
       room: "",
       roomDisplay: "",
+      modelActivate: {},
+      editingMessage: "",
     };
-    this.connectSocket = this.connectSocket.bind(this);
     this.inputChange = this.inputChange.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.listen = this.listen.bind(this);
@@ -45,6 +39,10 @@ class Chat extends Component {
     this.createRoom = this.createRoom.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.getPreviousMessages = this.getPreviousMessages.bind(this);
+    this.editMessage = this.editMessage.bind(this);
+    this.deleteMessage = this.deleteMessage.bind(this);
+    this.enableEditInput = this.enableEditInput.bind(this);
+    this.editMessageOnChange = this.editMessageOnChange.bind(this);
   }
 
   componentDidMount() {
@@ -59,20 +57,12 @@ class Chat extends Component {
         },
       },
     });
-    // this.connectSocket();
     this.listen();
   }
 
   componentWillUnmout() {
     console.log("disconnect");
     socket.close();
-  }
-
-  connectSocket() {
-    console.log("username: " + this.state.username);
-    socket.on("connect", function () {
-      console.log("Connected");
-    });
   }
 
   listen() {
@@ -89,8 +79,11 @@ class Chat extends Component {
 
     socket.on("previousMessage", (data) => {
       data.map((item) => {
+        let newModelActivate = { ...this.state.modelActivate };
+        newModelActivate[item.id] = false;
         this.setState({
           messages: this.state.messages.concat(item),
+          modelActivate: newModelActivate,
         });
       });
       this.updateScroll();
@@ -103,7 +96,6 @@ class Chat extends Component {
     });
 
     socket.on("roomCreated", (data) => {
-      // console.log("Room created");
       this.getRooms();
     });
   }
@@ -137,12 +129,9 @@ class Chat extends Component {
         if (res.data) {
           var data = res.data;
           for (const key of Object.keys(data)) {
-            data[key]["name"] = data[key]["name"].replace(
-              this.state.username + ", ",
-              ""
-            ).replace(
-              ", " + this.state.username, ""
-            );
+            data[key]["name"] = data[key]["name"]
+              .replace(this.state.username + ", ", "")
+              .replace(", " + this.state.username, "");
           }
           this.setState({
             rooms: data,
@@ -159,9 +148,13 @@ class Chat extends Component {
         { headers: { Authorization: getHeaderToken() } }
       )
       .then((res) => {
+        this.setState({ messages: [] });
         res.data.map((item) => {
+          let newModelActivate = { ...this.state.modelActivate };
+          newModelActivate[item.id] = false;
           this.setState({
             messages: this.state.messages.concat(item),
+            modelActivate: newModelActivate,
           });
         });
         this.updateScroll();
@@ -194,6 +187,72 @@ class Chat extends Component {
     event.preventDefault();
   }
 
+  deleteMessage(id) {
+    console.log("delete", id);
+    axios
+      .post(
+        "/rooms/messages/delete",
+        { id: id, room: this.state.room, userId: this.state.userid },
+        {
+          headers: { Authorization: getHeaderToken() },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      });
+  }
+
+  editMessage(event, editBool, id) {
+    if (editBool) {
+      // clear edit message dict
+      axios
+        .post(
+          "/rooms/messages/edit",
+          {
+            id: id,
+            room: this.state.room,
+            userId: this.state.userid,
+            message: this.state.editingMessage,
+          },
+          {
+            headers: { Authorization: getHeaderToken() },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        });
+
+      this.enableEditInput(id, false, "none");
+    }
+
+    event.preventDefault();
+  }
+
+  enableEditInput(id, bool, message) {
+    let toggle = false;
+    if (bool) {
+      this.setState({ editingMessage: message });
+    }
+    let editedModelActivate = { ...this.state.modelActivate };
+    for (var key in editedModelActivate) {
+      if (parseInt(key) !== parseInt(id)) {
+        editedModelActivate[key] = false;
+      }
+    }
+    if (editedModelActivate[id]) {
+      editedModelActivate[id] = false;
+    } else {
+      editedModelActivate[id] = true;
+    }
+    this.setState({ modelActivate: editedModelActivate });
+  }
+
+  editMessageOnChange(event, id) {
+    this.setState({
+      editingMessage: event.target.value,
+    });
+  }
+
   updateScroll() {
     var element = document.getElementById("messageDiv");
     element.scrollTop = element.scrollHeight;
@@ -213,7 +272,7 @@ class Chat extends Component {
           this.getRooms();
         },
         (error) => {
-          alert("Create room error", error);
+          alert("Room with these users is already created", error);
         }
       );
   }
@@ -240,6 +299,104 @@ class Chat extends Component {
       roomDisplay: room.name,
     });
   }
+
+  displayMessages = () =>
+    this.state.messages.map((item, i) => (
+      <div class="columns is-vcentered is-flex is-centered">
+        <div class="column is-narrow">
+          <figure
+            class="image is-64x64"
+            data-tooltip={item.username}
+            data-position="right center"
+            data-variation="mini"
+            data-inverted=""
+          >
+            <img class="is-rounded" src={foot}></img>
+          </figure>
+        </div>
+        <div class="column">
+          <article
+            className={
+              "message is-small " +
+              (item.removed === true ? " is-danger" : "") +
+              (parseInt(this.state.userid) === parseInt(item.userId)
+                ? " is-success"
+                : " is-info")
+            }
+            data-tooltip={new Date(item.time).toLocaleString("en-AU")}
+            data-position="bottom left"
+            data-variation="mini"
+            data-inverted=""
+          >
+            <div class="message-header has-text-black">
+              <p>
+                {item.username} {item.edited === true && "<edited>"}
+              </p>
+
+              {parseInt(this.state.userid) === parseInt(item.userId) &&
+                !item.removed && (
+                  <div>
+                    <a
+                      class="button is-text is-small"
+                      onClick={() =>
+                        this.enableEditInput(item.id, true, item.message)
+                      }
+                    >
+                      <span class="icon">
+                        <i class="fas fa-edit"></i>
+                      </span>
+                    </a>
+                    <a
+                      class="button is-text is-small"
+                      onClick={() => {
+                        if (window.confirm("Do you want to Delete?"))
+                          this.deleteMessage(item.id);
+                      }}
+                    >
+                      <span class="icon">
+                        <i class="fas fa-trash"></i>
+                      </span>
+                    </a>
+                  </div>
+                )}
+            </div>
+            <div class="message-body has-text-black">
+              {this.state.modelActivate[item.id] ? (
+                <form
+                  onSubmit={(e) => {
+                    if (window.confirm("Do you want to edit?"))
+                      this.editMessage(e, true, item.id);
+                    else this.editMessage(e, false, item.id);
+                  }}
+                  style={{ width: "100%" }}
+                  // onBlur={() => this.enableEditInput(item.id, false, '')}
+                >
+                  <div class="field has-addons">
+                    <p class="control is-expanded">
+                      <input
+                        name={"editMessage" + item.id}
+                        class="input is-rounded"
+                        type="text"
+                        onChange={(e) => this.editMessageOnChange(e, item.id)}
+                        value={this.state.editingMessage}
+                        disabled={this.state.room === ""}
+                      />
+                    </p>
+                    <p class="control">
+                      <button class="button is-danger is-rounded" type="submit">
+                        Edit
+                      </button>
+                    </p>
+                  </div>
+                </form>
+              ) : (
+                <span>{item.message}</span>
+              )}
+            </div>
+          </article>
+        </div>
+      </div>
+    ));
 
   render() {
     return (
@@ -302,23 +459,18 @@ class Chat extends Component {
             <div class="message-header">
               <p>{this.state.roomDisplay}</p>
             </div>
-            <article
-              class="message"
+            <div
               id="messageDiv"
-              style={{ width: "100%", height: "500px", overflow: "auto" }}
+              style={{ width: "100%", height: "1000px", overflow: "auto" }}
             >
               <div class="message-body" style={{}}>
                 {this.state.room === "" && (
                   <p>Click on the buttons on the right to start a chat</p>
                 )}
-                {this.state.messages.map((item, i) => (
-                  <div key={item.time}>
-                    {new Date(item.time).toLocaleString("en-AU")} -{" "}
-                    {item.username}: {item.message}
-                  </div>
-                ))}
+                {this.state.messages.length === 0 && this.state.room !== '' && <span>No Messages</span>}
+                {this.displayMessages()}
               </div>
-            </article>
+            </div>
           </div>
         </div>
         <div class="columns">
@@ -328,15 +480,16 @@ class Chat extends Component {
               <form onSubmit={this.sendMessage} style={{ width: "100%" }}>
                 <input
                   name="sendMessage"
-                  class="input"
+                  class="input is-rounded"
                   type="text"
-                  style={{ width: "90%" }}
+                  style={{ width: "80%" }}
                   onChange={this.inputChange}
                   value={this.state.sendMessage}
                   disabled={this.state.room === ""}
+                  placeholder="Write something"
                 ></input>
                 <button
-                  class="button is-primary"
+                  class="button is-primary is-rounded"
                   disabled={this.state.room === ""}
                 >
                   Send

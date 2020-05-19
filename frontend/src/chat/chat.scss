@@ -1,0 +1,11 @@
+@import "../styles/variables";
+@import "../styles/mixins";
+
+[data-tooltip]:after {
+    z-index: 2;
+}
+  
+[data-tooltip]:before,
+.ui.popup:before {
+z-index: 3;
+}
