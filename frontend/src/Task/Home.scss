@@ -50,4 +50,30 @@
   .navbar-brand {
     poistion: absolute;
   }
+
+  .desktop-menu {
+      display: none;
+  }
+}
+
+@media (min-width: 1024px){ 
+    .mobile-nav-open {
+        display: none;
+    }
+    .mobile-menu {
+        display: none;
+    }
+}
+
+.mobile-nav-open button {
+    background-color: black;
+    color: #fff;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    border: none;
+    transition: all 0.4s ease 0s;
+
 }
