@@ -32,7 +32,12 @@ If you want to use docker this is how.
 * ensure docker and docker-compose is installed
 * cd into root directory
 * run `docker-compose build`
-* run `docker-compose up` 
+* run `docker-compose up` a
+
+# Bash
+If you want to use bash script to launch project
+* cd into root directory
+* run `bash build.sh`
 
 # Common problems
 ## Errors when pulling new changes or changing branches
@@ -49,10 +54,15 @@ If you want to use docker this is how.
   * delete database.db
   * start backend
   
-* Alternate: go to __init__.py 
+* Alternative: go to \_\_init\_\_.py 
   * stop backend
   * comment database.init_db()
   * uncomment database.reset_db()
   * uncomment populate_db()
   * start backend
   * if works revert the changes above
+
+## Proxy errors
+* Ensure backend and frontend are running
+* Go to `frontend/package.json`, and ensure that line 5 http://localhost:5000 if not runnning in docker. If running docker needs to be http://backend:5000
+* go to `frontend/src/chat/chat.js` and ensure that line 20 is http://localhost:5000 if not runnning in docker. If running docker needs to be http://backend:5000

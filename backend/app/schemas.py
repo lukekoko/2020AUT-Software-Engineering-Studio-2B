@@ -1,6 +1,8 @@
 from enum import Enum
 from pydantic import BaseModel, Field, EmailStr
 
+import logging
+logger = logging.getLogger(__name__)
 class UserSchema(BaseModel):
     id: int
     name: str

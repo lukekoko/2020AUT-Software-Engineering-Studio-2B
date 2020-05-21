@@ -24,11 +24,13 @@ class CreateTask extends Component {
       loginSuccessful: Boolean,
       description: [],
       users: [],
-      user: null, 
+      user: null,
+      selectedUsersIDs: [],
     };
     this.getUsers = this.getUsers.bind(this);
     this.createTask = this.createTask.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.onSelectChange = this.onSelectChange.bind(this);
   }
 
   componentDidMount() {
@@ -40,56 +42,66 @@ class CreateTask extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  onSelectChange(event, value) {
+    this.setState({
+      selectedUsers: value.value,
+    });
+  }
+
   getUsers() {
     axios
       .get("/users", { headers: { Authorization: getHeaderToken() } })
       .then((res) => {
         if (res.data) {
-          
-            res.data.map((item) =>
-              this.setState({
-                users: this.state.users.concat({
-                  key: item.id,
-                  text: item.name,
-                  value: item.id,
-                }),
-              })
-            );
-          
+          res.data.map((item) =>
+            this.setState({
+              users: this.state.users.concat({
+                key: item.id,
+                text: item.name,
+                value: item.id,
+              }),
+            })
+          );
+
           console.log(res.data);
         }
       });
   }
 
-  getCurrentUser(){ 
+  getCurrentUser() {
     axios
-    .get("/protected", { headers: { Authorization: getHeaderToken() } })
-    .then((res) => {
-      this.setState({
-        user: res.data,
+      .get("/protected", { headers: { Authorization: getHeaderToken() } })
+      .then((res) => {
+        this.setState({
+          user: res.data,
+        });
+        Cookies.set("username", res.data["name"]);
+        Cookies.set("userid", res.data["id"]);
       });
-      Cookies.set("username", res.data['name']);
-      Cookies.set("userid", res.data['id']);
-    });
   }
 
   createTask() {
-
-    console.log(this.state.user['name'], this.state.title, this.state.description, this.state.user['id'], this.state.users)
+    console.log(
+      this.state.user["name"],
+      this.state.title,
+      this.state.description,
+      this.state.user["id"],
+      this.state.selectedUsersIDs
+    );
     axios
       .post("/createTask", {
-        name: this.state.user['name'],
-        title: this.state.title, 
-        description: this.state.description, 
-        assignerID: this.state.user['id'], 
-        assignedIDS: this.state.users
+        name: this.state.user["name"],
+        title: this.state.title,
+        description: this.state.description,
+        assignerID: this.state.user["id"],
+        assignedIDS: this.state.selectedUsers,
       })
       .then(
         (res) => {
-          alert("Create Task Successful", res)
+          alert("Create Task Successful", res);
         },
         (error) => {
-          alert("Create Task Error", error)
+          alert("Create Task Error", error);
         }
       );
   }
@@ -138,6 +150,7 @@ class CreateTask extends Component {
                           options={this.state.users}
                           fluid
                           disabled={this.state.users.length == 0 ? true : false}
+                          onChange={this.onSelectChange}
                         ></Dropdown>
 
                         <Form.Field>

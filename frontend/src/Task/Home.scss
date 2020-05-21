@@ -29,6 +29,7 @@
     color: white;
 }
 
+<<<<<<< HEAD
 body .list {
     position: relative; 
     width: 250px;
@@ -101,4 +102,27 @@ body ul .draggable:hover:after {
 
 .over {
     transform: scale(1.1, 1.1);
+=======
+.navbar-item {
+    font-weight: bold;
+}
+
+.navbar-item.has-text-white:hover, a.has-text-white:hover  {
+    color: black !important;
+}
+
+@media (max-width: 1024px){
+    .has-text-white {
+        color: black !important;
+    }
+  .navbar-menu {
+    position: absolute;
+    right: 0;
+    top: 70px;
+    display: block;
+  }
+  .navbar-brand {
+    poistion: absolute;
+  }
+>>>>>>> 427b236e67f9774de256d257e1410c5675afbd5a
 }

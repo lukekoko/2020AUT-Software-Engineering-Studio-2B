@@ -45,7 +45,7 @@ const getListStyle = (isDraggingOver) => ({
   width: "30%",
 });
 
-export default class Task extends Component {
+export default class dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -64,6 +64,8 @@ export default class Task extends Component {
         this.setState({
           user: res.data,
         });
+        //Cookies.set("username", res.data['name']);
+        // Cookies.set("userid", res.data['id']);
         this.getCreatedTasks();
       });
   }
@@ -136,7 +138,7 @@ export default class Task extends Component {
           <section class="hero">
             <div class="hero-body">
               <div>
-                <h1 class="title">Tasks Page</h1>
+                <h1 class="title">Main Board</h1>
 
                 {this.state.tasks.length == 0 ? (
                   "No Tasks"
