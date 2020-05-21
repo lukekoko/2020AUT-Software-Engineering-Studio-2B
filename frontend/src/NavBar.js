@@ -101,7 +101,7 @@ class NavBar extends Component {
             >
               Chat
             </a>
-            <a class="navbar-item has-text-white">Calander</a>
+            <a class="navbar-item has-text-white">Calendar</a>
           </div>
           <div class="navbar-end">
             <div class="navbar-item">
@@ -166,7 +166,7 @@ class NavBar extends Component {
             >
               Chat
             </a>
-            <a class="navbar-item has-text-white">Calander</a>
+            <a class="navbar-item has-text-white">Calendar</a>
           </div>
           <div class="navbar-end">
             <div class="navbar-item">
