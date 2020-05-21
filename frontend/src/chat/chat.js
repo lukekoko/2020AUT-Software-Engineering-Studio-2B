@@ -7,7 +7,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Form, Dropdown } from "semantic-ui-react";
 import "./chat.scss";
-import foot from "../assets/foot.jpg";
+import foot from "../assets/baby.gif";
 
 // http://34.87.237.202:5000 for docker
 var url = "http://localhost:5000";
@@ -28,6 +28,7 @@ class Chat extends Component {
       roomDisplay: "",
       modelActivate: {},
       editingMessage: "",
+      editRoomName: false,
     };
     this.inputChange = this.inputChange.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -44,6 +45,8 @@ class Chat extends Component {
     this.enableEditInput = this.enableEditInput.bind(this);
     this.editMessageOnChange = this.editMessageOnChange.bind(this);
     this.deleteRoom = this.deleteRoom.bind(this);
+    this.editRoomName = this.editRoomName.bind(this);
+    this.editRoomNameOnChange = this.editRoomNameOnChange.bind(this);
   }
 
   componentDidMount() {
@@ -135,6 +138,11 @@ class Chat extends Component {
               .replace(this.state.username + ", ", "")
               .replace(", " + this.state.username, "");
           }
+          // for (const key of Object.keys(data)) {
+          //   data[key]["name"] = data[key]["name"]
+          //     .replace(this.state.username + ", ", "")
+          //     .replace(", " + this.state.username, "");
+          // }
           this.setState({
             rooms: data,
           });
@@ -297,7 +305,7 @@ class Chat extends Component {
     this.setState({
       room: event.target.value,
       messages: [],
-      roomDisplay: room.name,
+      roomDisplay: room.roomName,
     });
   }
 
@@ -315,6 +323,31 @@ class Chat extends Component {
         this.setState({ room: "", roomDisplay: "" });
         this.getRooms();
       });
+  }
+
+  editRoomNameOnChange(event) {
+    this.setState({
+      roomDisplay: event.target.value,
+    });
+  }
+
+  editRoomName(event) {
+    console.log(this.state.roomDisplay);
+    axios
+      .post(
+        "/rooms/edit",
+        { roomid: this.state.room, name: this.state.roomDisplay },
+        {
+          headers: { Authorization: getHeaderToken() },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        // this.setState({ room: "", roomDisplay: "" });
+        this.setState({editRoomName: false})
+        this.getRooms();
+      });
+    event.preventDefault();
   }
 
   displayMessages = () =>
@@ -474,11 +507,43 @@ class Chat extends Component {
           </div>
           <div class="column">
             <div class="message-header">
-              <p>{this.state.roomDisplay}</p>
+              {this.state.editRoomName ? (
+                <form
+                  onSubmit={(e) => {
+                    if (window.confirm("Do you want to edit?"))
+                      this.editRoomName(e);
+                  }}
+                  style={{ width: "90%" }}
+                  // onBlur={() => this.enableEditInput(item.id, false, '')}
+                >
+                  <div class="field has-addons">
+                    <p class="control is-expanded">
+                      <input
+                        name={"editMessage" + this.state.roomDisplay}
+                        class="input is-rounded"
+                        type="text"
+                        onChange={this.editRoomNameOnChange}
+                        value={this.state.roomDisplay}
+                        disabled={this.state.room === ""}
+                      />
+                    </p>
+                    <p class="control">
+                      <button class="button is-danger is-rounded" type="submit">
+                        Edit
+                      </button>
+                    </p>
+                  </div>
+                </form>
+              ) : (
+                <p>{this.state.roomDisplay}</p>
+              )}
               {this.state.roomDisplay !== "" && this.state.room !== "1" && (
                 <div>
                   <a
                     class="button is-text is-small"
+                    onClick={() => {
+                      this.setState({ editRoomName: !this.state.editRoomName });
+                    }}
                   >
                     <span class="icon has-text-light">
                       <i class="fas fa-edit"></i>
