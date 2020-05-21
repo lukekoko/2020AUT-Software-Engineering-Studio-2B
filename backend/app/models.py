@@ -94,30 +94,30 @@ class Messages(Base):
     def __repr__(self):
         return '<Message %r>' % (self.message)
 
-class ToDo(Base):
-    __tablename__='ToDo'
-    id = Column(Integer, primary_key=True)
-    taskName = db.Column(db.String(100), unique=True, nullable=False)
-    description = db.Column(db.String(500))
+# class ToDo(Base):
+#     __tablename__='ToDo'
+#     id = Column(Integer, primary_key=True)
+#     taskName = Column(String(100), unique=True, nullable=False)
+#     description = Column(String(500))
 
-    def __repr__(self):
-        return '<taskName %r>' % (self.taskName)
+#     def __repr__(self):
+#         return '<taskName %r>' % (self.taskName)
 
-class Doing(Base):
-    __tablename__='Doing'
-    id = Column(Integer, primary_key=True)
-    taskName = Column(String(100), unique=True)
-    description = Column(String(500))
+# class Doing(Base):
+#     __tablename__='Doing'
+#     id = Column(Integer, primary_key=True)
+#     taskName = Column(String(100), unique=True)
+#     description = Column(String(500))
 
-    def __repr__(self):
-        return '<taskName %r>' % (self.taskName)
+#     def __repr__(self):
+#         return '<taskName %r>' % (self.taskName)
 
-class Done(Base):
-    __tablename__='Done'
-    id = Column(Integer, primary_key=True)
-    taskName = Column(String(100), unique=True)
-    description = Column(String(500))
+# class Done(Base):
+#     __tablename__='Done'
+#     id = Column(Integer, primary_key=True)
+#     taskName = Column(String(100), unique=True)
+#     description = Column(String(500))
 
-    def __repr__(self):
-        return '<taskName %r>' % (self.taskName)
+#     def __repr__(self):
+#         return '<taskName %r>' % (self.taskName)
 

@@ -1,6 +1,6 @@
 @import "../styles/variables";
 @import "../styles/mixins";
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,800");
+
 
 .navGrad{
     height: 70px;
@@ -29,80 +29,6 @@
     color: white;
 }
 
-<<<<<<< HEAD
-body .list {
-    position: relative; 
-    width: 250px;
-    margin: 0px auto; 
-    display: block;   
-}
-
-body .list ::-webkit-input-placeholder{
-    color: #ddcaed; 
-}
-
-body .list .input{
-    outline: none;
-    border: 1px solid white;
-    background-color:#a778cf;
-    color: white;
-    height: 50px;
-    width: 250px;
-    padding-left: 10px;
-    font-family: "Raleway", sans-serif;
-    font-weight: 800;
-    font-size: 16px;
-    margin-left: -5px; 
-}
-
-body .list span {
-    position: absolute;     
-  right: 0;
-  top: 0;
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1.8;
-  cursor: pointer;
-  transition: all 200ms;
-  color: white;
-  will-change: transform;
-}
-
-body .list span:hover {
-    transform: rotate(180deg);
-}
-
-body ul {
-    padding: 0px; 
-}
-
-body ul .draggable {
-    will-change: transform;
-  font-family: "Raleway", sans-serif;
-  font-weight: 800;
-  height: 50px;
-  list-style-type: none;
-  margin: 10px;
-  background-color: white;
-  color: #212121;
-  width: 250px;
-  line-height: 3.2;
-  padding-left: 10px;
-  cursor: move;
-  transition: all 200ms;
-  user-select: none;
-  margin: 10px auto;
-  position: relative;
-}
-
-body ul .draggable:hover:after {
-    opacity: 1; 
-    transform: translate(0);
-}
-
-.over {
-    transform: scale(1.1, 1.1);
-=======
 .navbar-item {
     font-weight: bold;
 }
@@ -124,5 +50,4 @@ body ul .draggable:hover:after {
   .navbar-brand {
     poistion: absolute;
   }
->>>>>>> 427b236e67f9774de256d257e1410c5675afbd5a
 }
