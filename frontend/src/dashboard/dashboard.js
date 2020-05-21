@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-//import ReactDOM from "react-dom";
+import Navbar from "../NavBar";
+import "./Home.scss";
 import axios from "axios";
-import { getHeaderToken } from "./Authentication/JwtConfig";
-import Navbar from "./NavBar";
-import Cookies from "js-cookie";
-import "./Task/Home.scss";
-//import { getHeaderToken } from "../Authentication/JwtConfig";
+import "bulma/css/bulma.css";
+import { getHeaderToken } from "../Authentication/JwtConfig";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
 
 // fake data generator
 const getItems = (tasks) =>
@@ -48,8 +45,7 @@ const getListStyle = (isDraggingOver) => ({
   width: "30%",
 });
 
-
-export default class Home extends Component {
+export default class dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,17 +55,6 @@ export default class Home extends Component {
     };
     this.getCreatedTasks = this.getCreatedTasks.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
-  
-    // axios
-    //   .get("/protected", { headers: { Authorization: getHeaderToken() } })
-    //   .then((res) => {
-    //     this.setState({
-    //       user: res.data,
-    //     });
-    //     Cookies.set("username", res.data['name']);
-    //     Cookies.set("userid", res.data['id']);
-    //     this.getCreatedTasks();
-    //   });
   }
 
   componentDidMount() {
@@ -79,8 +64,8 @@ export default class Home extends Component {
         this.setState({
           user: res.data,
         });
-        Cookies.set("username", res.data['name']);
-        Cookies.set("userid", res.data['id']);
+        //Cookies.set("username", res.data['name']);
+        // Cookies.set("userid", res.data['id']);
         this.getCreatedTasks();
       });
   }
@@ -154,9 +139,6 @@ export default class Home extends Component {
             <div class="hero-body">
               <div>
                 <h1 class="title">Main Board</h1>
-                <p>Email: {this.state.user.email}</p>
-                <p>Name: {this.state.user.name}</p>
-
 
                 {this.state.tasks.length == 0 ? (
                   "No Tasks"
@@ -218,8 +200,6 @@ export default class Home extends Component {
                     </Droppable>
                   </DragDropContext>
                 )}
-
-
               </div>
             </div>
           </section>
