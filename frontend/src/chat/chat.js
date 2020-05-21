@@ -7,7 +7,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Form, Dropdown } from "semantic-ui-react";
 import "./chat.scss";
-import foot from "../assets/baby.gif";
+import foot from "../assets/index.png";
 
 // http://34.87.237.202:5000 for docker
 var url = "http://localhost:5000";
@@ -47,6 +47,7 @@ class Chat extends Component {
     this.deleteRoom = this.deleteRoom.bind(this);
     this.editRoomName = this.editRoomName.bind(this);
     this.editRoomNameOnChange = this.editRoomNameOnChange.bind(this);
+    this.dropdownlist = React.createRef();
   }
 
   componentDidMount() {
@@ -132,7 +133,6 @@ class Chat extends Component {
       .then((res) => {
         if (res.data) {
           var data = res.data;
-          console.log(data);
           for (const key of Object.keys(data)) {
             data[key]["roomName"] = data[key]["roomName"]
               .replace(this.state.username + ", ", "")
@@ -279,6 +279,9 @@ class Chat extends Component {
       .then(
         (res) => {
           this.getRooms();
+          this.setState({selectedUsersForCreatingRoom: []});
+          // this.state.selectedUsersForCreatingRoom.length = 0;
+          // this.dropdownlist.current.dropdown('clear');
         },
         (error) => {
           alert("Room with these users is already created", error);
@@ -319,7 +322,6 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        console.log(res);
         this.setState({ room: "", roomDisplay: "" });
         this.getRooms();
       });
@@ -343,7 +345,6 @@ class Chat extends Component {
       )
       .then((res) => {
         console.log(res);
-        // this.setState({ room: "", roomDisplay: "" });
         this.setState({editRoomName: false})
         this.getRooms();
       });
@@ -457,7 +458,7 @@ class Chat extends Component {
             <Form onSubmit={this.createRoom}>
               <div
                 class="columns is-flex is-centered"
-                style={{ padding: "5px" }}
+                // style={{ padding: "5px" }}
               >
                 <div class="column">
                   <Dropdown
@@ -472,6 +473,8 @@ class Chat extends Component {
                     fluid
                     disabled={this.state.users.length == 0 ? true : false}
                     onChange={this.onSelectChange}
+                    value={this.state.selectedUsersForCreatingRoom}
+                    ref={this.dropdownlist} 
                   ></Dropdown>
                 </div>
                 <div class="column">
