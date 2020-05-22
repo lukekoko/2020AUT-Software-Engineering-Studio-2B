@@ -37,7 +37,8 @@ def CreateTask():
             for ID in assignedIDS:
                 print(ID)
                 user = models.User.query.filter_by(id=ID).first()
-                user.tasks.append(task)
+                usertasks = models.UserTask(user, task, 0,0) #create associative object first
+                user.tasks.append(usertasks)
                 database.db_session.add(user)
             database.db_session.commit()  # SA will insert a relationship row
         except:

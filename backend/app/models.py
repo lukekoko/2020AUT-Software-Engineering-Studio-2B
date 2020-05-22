@@ -6,13 +6,6 @@ from sqlalchemy.dialects.postgresql import ARRAY
 import logging
 logger = logging.getLogger(__name__)
 
-#userTasks = Table('userTasks', Base.metadata,
-#                  Column('userId', Integer, ForeignKey('users.id')),
-#                  Column('taskId', Integer, ForeignKey('tasks.id')),
-                  #Column('hours', Integer, unique=False, nullable=False),
-                  #Column('minutes', Integer, unique=False, nullable=False)
-#                  )
-
 userRooms = Table('userRooms', Base.metadata,
     Column('id', Integer, primary_key=True),
     Column('userId', Integer, ForeignKey('users.id')),
