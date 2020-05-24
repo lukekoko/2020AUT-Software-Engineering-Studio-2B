@@ -79,14 +79,14 @@ class ChatRooms(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
     roomName = Column(String(100), nullable=False)
-    messages = relationship('Messages')
+    messages = relationship('Messages', backref='ChatRooms', passive_deletes=True)
     users = relationship('User', secondary=userRooms, back_populates='rooms')
 
 class Messages(Base):
     __tablename__ = 'Messages'
     id = Column(Integer, primary_key=True)
     userId = Column(Integer, ForeignKey('users.id'), nullable=False)
-    roomId = Column(Integer, ForeignKey('ChatRooms.id'), nullable=False)
+    roomId = Column(Integer, ForeignKey('ChatRooms.id', ondelete='CASCADE'), nullable=False)
     time = Column(Integer, nullable=False)
     message = Column(String())
     removed = Column(Boolean, nullable=False)

@@ -186,6 +186,7 @@ def deleteRoom():
     id = request.json['roomid']
     room = models.ChatRooms.query.filter_by(id=id).first()
     try:
+        messages = models.Messages.query.filter(models.Messages.roomId == id).delete()
         database.db_session.delete(room)
         database.db_session.commit()
     except:

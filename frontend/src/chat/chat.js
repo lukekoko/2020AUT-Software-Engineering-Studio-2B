@@ -322,7 +322,7 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        this.setState({ room: "", roomDisplay: "" });
+        this.setState({ room: "", roomDisplay: "", messages: [] });
         this.getRooms();
       });
   }
