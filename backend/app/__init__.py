@@ -42,17 +42,17 @@ def shutdown_session(exception=None):
 from app import views, models, auth, chat, tasks
 
 def populate_db():
-    room = models.ChatRooms(name="General")
+    room = models.ChatRooms(name="General", roomName="General")
     user = models.User(name="test", email="test@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
     user.rooms.append(room)
     database.db_session.add(user)
-    user = models.User(name="test1", email="test1@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
+    user = models.User(name="John", email="John@John.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
     user.rooms.append(room)
     database.db_session.add(user)
-    user = models.User(name="test2", email="test2@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
+    user = models.User(name="Olivia", email="Olivia@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
     user.rooms.append(room)
     database.db_session.add(user)
-    user = models.User(name="test3", email="test3@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
+    user = models.User(name="Emma", email="Emma@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
     user.rooms.append(room)
     database.db_session.add(user)
     database.db_session.commit()

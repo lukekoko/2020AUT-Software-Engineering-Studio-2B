@@ -98,7 +98,7 @@ def createRoom():
         roomname = ', '.join(userNames)
         # adding room to users
         try:
-            room = models.ChatRooms(name=roomname)
+            room = models.ChatRooms(name=roomname, roomName=roomname)
             # add rooms to users
             for user in filteredUsers:
                 user.rooms.append(room)
@@ -179,3 +179,28 @@ def editmessage():
     except:
         return jsonify({"msg": "error"}), 400
     return jsonify({"msg": "Message edited"}), 200
+
+@app.route('/rooms/delete', methods=['POST'])
+@jwt_required
+def deleteRoom():
+    id = request.json['roomid']
+    room = models.ChatRooms.query.filter_by(id=id).first()
+    try:
+        messages = models.Messages.query.filter(models.Messages.roomId == id).delete()
+        database.db_session.delete(room)
+        database.db_session.commit()
+    except:
+        return jsonify({"msg": "error"}), 400
+    return jsonify({"msg": "Message deleted"}), 200
+
+@app.route('/rooms/edit', methods=['POST'])
+@jwt_required
+def editRoom():
+    id = request.json['roomid']
+    room = models.ChatRooms.query.filter_by(id=id).first()
+    try:
+        room.roomName = request.json['name']
+        database.db_session.commit()
+    except:
+        return jsonify({"msg": "error"}), 400
+    return jsonify({"msg": "Message deleted"}), 200
