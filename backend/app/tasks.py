@@ -37,7 +37,7 @@ def CreateTask():
             for ID in assignedIDS:
                 print(ID)
                 user = models.User.query.filter_by(id=ID).first()
-                usertasks = models.UserTask(user, task, 0,0) #create associative object first
+                usertasks = models.UserTask(user, task,0,0) #create associative object first
                 user.tasks.append(usertasks)
                 database.db_session.add(user)
             database.db_session.commit()  # SA will insert a relationship row
@@ -56,11 +56,14 @@ def getCreatedTasks():
         query = database.db_session.query(models.Tasks).filter(models.Tasks.assignerID == requestUserId).all()
         tasks = list()
         for createdTask in query:
+            hmQuery = database.db_session.query(models.UserTask).filter(models.UserTask.taskId == createdTask.id and models.Tasks.assignerID == requestUserId).first()
             tasks.append({
                 'id': createdTask.id,
                 'name': createdTask.name,
                 'title': createdTask.title,
                 'description': createdTask.description,
                 'assignerID': createdTask.assignerID,
+                'hours': hmQuery.hours,
+                'minutes': hmQuery.minutes,
             })
         return jsonify(tasks)

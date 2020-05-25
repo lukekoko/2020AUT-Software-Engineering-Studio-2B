@@ -13,6 +13,8 @@ const getItems = (tasks) =>
     title: `${k.title}`,
     name: `${k.name}`,
     description: `${k.description}`,
+    hours: `${k.hours}`,
+    minutes: `${k.minutes}`,
   }));
 
 // a little function to help us with reordering the result
@@ -176,6 +178,9 @@ export default class Task extends Component {
                                     <div class="content">
                                       {item.description}
                                     </div>
+                                    <div class="content">
+                                      Logged Time: {item.hours} hours {item.minutes} minutes
+                                    </div>
                                   </div>
                                   <footer class="card-footer">
                                     <a href="#" class="card-footer-item">
@@ -187,6 +192,15 @@ export default class Task extends Component {
                                     <a href="#" class="card-footer-item">
                                       Action3
                                     </a>
+                                  </footer>
+                                  <footer>
+                                    <div> 
+                                      <input type="number" placeholder="Hours" class="card-footer-item"/>
+                                      <input type="number" placeholder="Minutes" class="card-footer-item"/>
+                                      <a href="#" class="card-footer-item">
+                                        Submit Hours
+                                      </a>
+                                    </div>
                                   </footer>
                                 </div>
                               )}
