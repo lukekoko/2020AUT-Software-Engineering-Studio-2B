@@ -1,4 +1,4 @@
-from flask_socketio import send, emit, join_room, leave_room
+from flask_socketio import send, emit, join_room, leave_room, close_room
 from flask import Flask, render_template, jsonify, request
 from app import app, socketio, models, schemas, database
 from flask_jwt_extended import ( jwt_required, get_jwt_identity )
@@ -156,11 +156,12 @@ def getUsersThatAreNotInRoomsTogether():
 def deleteMessage():
     id = request.json['id']
     message = models.Messages.query.filter_by(id=id).first()
+    userids = getUsersFromRoom(message.roomId)
     try:
         message.message = "Removed"
         message.removed = True
         database.db_session.commit()
-        socketio.emit('success', {'userid': request.json['userId'] }, room=request.json['room'])
+        socketio.emit('successMessage', {'userid': userids }, room=request.json['room'])
     except:
         return jsonify({"msg": "error"}), 400
     return jsonify({"msg": "Message deleted"}), 200
@@ -171,11 +172,12 @@ def deleteMessage():
 def editmessage():
     id = request.json['id']
     message = models.Messages.query.filter_by(id=id).first()
+    userids = getUsersFromRoom(message.roomId)
     try:
         message.message = request.json['message']
         message.edited = True
         database.db_session.commit()
-        socketio.emit('success', {'userid': request.json['userId'] }, room=request.json['room'])
+        socketio.emit('successMessage', {'userid': userids }, room=request.json['room'])
     except:
         return jsonify({"msg": "error"}), 400
     return jsonify({"msg": "Message edited"}), 200
@@ -185,10 +187,13 @@ def editmessage():
 def deleteRoom():
     id = request.json['roomid']
     room = models.ChatRooms.query.filter_by(id=id).first()
+    socketio.close_room(room.name)
+    userids = getUsersFromRoom(id)
     try:
         messages = models.Messages.query.filter(models.Messages.roomId == id).delete()
         database.db_session.delete(room)
         database.db_session.commit()
+        socketio.emit('successRoom', {'userid': userids, 'method': 'delete' })
     except:
         return jsonify({"msg": "error"}), 400
     return jsonify({"msg": "Message deleted"}), 200
@@ -198,9 +203,20 @@ def deleteRoom():
 def editRoom():
     id = request.json['roomid']
     room = models.ChatRooms.query.filter_by(id=id).first()
+    userids = getUsersFromRoom(id)
     try:
         room.roomName = request.json['name']
         database.db_session.commit()
+        socketio.emit('successRoom', {'userid': userids, 'method': 'edit' })
     except:
         return jsonify({"msg": "error"}), 400
     return jsonify({"msg": "Message deleted"}), 200
+
+
+def getUsersFromRoom(roomid):
+    # get users from roomid
+    useridArr = []
+    users = models.User.query.filter(models.User.rooms.any(id=roomid)).all()
+    for user in users:
+        useridArr.append(user.id)
+    return useridArr

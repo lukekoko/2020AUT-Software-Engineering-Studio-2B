@@ -100,6 +100,33 @@ class Chat extends Component {
       }
     });
 
+    // this is for deleteing and editing messages
+    socket.on("successMessage", (data) => {
+      console.log(data['userid']);
+      if (data["userid"].includes(parseInt(this.state.userid))) {
+        this.getPreviousMessages();
+      }
+    });
+
+    // this is for deleteing and editing + rooms
+    socket.on("successRoom", (data) => {
+      console.log(data["userid"]);
+      if (data["userid"].includes(parseInt(this.state.userid))) {
+        if (data["method"] === "delete") {
+          socket.emit("leave", {
+            username: this.state.username,
+            userid: this.state.userid,
+            room: this.state.room,
+          });
+          this.setState({ room: "", roomDisplay: "", messages: [] });
+          this.getRooms();  
+        } else {
+          this.setState({editRoomName: false})
+          this.getRooms();  
+        }
+      }
+    });
+
     socket.on("roomCreated", (data) => {
       this.getRooms();
     });
@@ -207,7 +234,7 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       });
   }
 
@@ -322,8 +349,7 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        this.setState({ room: "", roomDisplay: "", messages: [] });
-        this.getRooms();
+        // this.setState({ room: "", roomDisplay: "", messages: [] });
       });
   }
 
@@ -344,9 +370,8 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        console.log(res);
-        this.setState({editRoomName: false})
-        this.getRooms();
+        // console.log(res);
+        // this.setState({editRoomName: false})
       });
     event.preventDefault();
   }
