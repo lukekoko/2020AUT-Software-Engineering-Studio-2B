@@ -57,7 +57,7 @@ class CreateTask extends Component {
             this.setState({
               users: this.state.users.concat({
                 key: item.id,
-                text: item.name,
+                text: item.email,
                 value: item.id,
               }),
             })
@@ -76,6 +76,7 @@ class CreateTask extends Component {
           user: res.data,
         });
         Cookies.set("username", res.data["name"]);
+        Cookies.set("email", res.data["email"]);
         Cookies.set("userid", res.data["id"]);
       });
   }
@@ -156,6 +157,9 @@ class CreateTask extends Component {
                         <Form.Field>
                           <Button className="btn_submit" type="submit">
                             Submit
+                          </Button>
+                          <Button className="btn_submit" type="submit">
+                            Send Email
                           </Button>
                         </Form.Field>
                       </Form>
