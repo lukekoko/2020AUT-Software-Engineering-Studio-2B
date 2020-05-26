@@ -57,7 +57,7 @@ class CreateTask extends Component {
             this.setState({
               users: this.state.users.concat({
                 key: item.id,
-                text: item.email,
+                text: item.name,
                 value: item.id,
               }),
             })
@@ -95,7 +95,7 @@ class CreateTask extends Component {
         title: this.state.title,
         description: this.state.description,
         assignerID: this.state.user["id"],
-        assignedIDS: this.state.selectedUsers,
+        assignedIDS: this.state.selectedUsers
       })
       .then(
         (res) => {
@@ -158,9 +158,9 @@ class CreateTask extends Component {
                           <Button className="btn_submit" type="submit">
                             Submit
                           </Button>
-                          <Button className="btn_submit" type="submit">
+                          {/* <Button className="btn_submit" type="submit"> // redundant, request is already send with the above button
                             Send Email
-                          </Button>
+                          </Button> */}
                         </Form.Field>
                       </Form>
                     </Grid.Column>

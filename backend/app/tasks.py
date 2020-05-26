@@ -11,18 +11,14 @@ from flask_jwt_extended import (
 
 import logging
 logger = logging.getLogger(__name__)
-bcrypt = Bcrypt(app)
-jwt = JWTManager(app)
 
-app = Flask(__name__)
-mail= Mail(app)
-
+# NB might need to enable less secure on google account to sign in
 app.config['MAIL_SERVER']='smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'zainsalimuddin@gmail.com' #test email goes here
-app.config['MAIL_PASSWORD'] = '**********' #test password goes here
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = '' #test email goes here 
+app.config['MAIL_PASSWORD'] = "" #test password goes here
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 mail = Mail(app)
 
 
@@ -51,14 +47,12 @@ def CreateTask():
                 user = models.User.query.filter_by(id=ID).first()
                 user.tasks.append(task)
                 database.db_session.add(user)
+                # sendEmail(user.email) # This could be an easy way to send emails. As you have access to each users email.
             database.db_session.commit()  # SA will insert a relationship row
+            sendEmail() #send email here..............................................................................
         except:
             return jsonify({"msg": "Cannot create Task"}), 500
-        
-        
         return jsonify({"msg": "Task Created"}), 200     
-        
-        
 
 
 
@@ -81,13 +75,10 @@ def getCreatedTasks():
             })
         return jsonify(tasks)
 
-@app.route("/createTask", methods = ['POST'])  #no idea how to connect to frontend. Dont think this routing is correct
-def index():                                   #this method also breaks CreateTask(). Receive "Create Task Error" when I click "submit" on create task page
-   msg = Message('Hello', sender = 'zainsalimuddin@gmail.com', recipients = ['zain.salimuddin@student.uts.edu.au']) 
+
+def sendEmail():                                   #this method also breaks CreateTask(). Receive "Create Task Error" when I click "submit" on create task page
+   msg = Message('Hello', sender = 'fillthisbackinwithwhateveryouhadbefore', recipients = ['zain.salimuddin@student.uts.edu.au']) 
    msg.body = "Hello You have new tasks"
    mail.send(msg)
    return "Sent"
-
-if __name__ == '__main__':
-   app.run(debug = True)
 
