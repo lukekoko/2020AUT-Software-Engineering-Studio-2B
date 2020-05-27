@@ -194,10 +194,10 @@ export default class Task extends Component {
                                     </a>
                                   </footer>
                                   <footer>
-                                    <div> 
-                                      <input type="number" placeholder="Hours" class="card-footer-item"/>
-                                      <input type="number" placeholder="Minutes" class="card-footer-item"/>
-                                      <a href="#" class="card-footer-item">
+                                    <div class="card-footer-div"> 
+                                      <input type="number" placeholder="Hours" class="card-footer-item-input"/>
+                                      <input type="number" placeholder="Minutes" class="card-footer-item-input"/>
+                                      <a href="#" class="card-footer-item-bottom">
                                         Submit Hours
                                       </a>
                                     </div>
