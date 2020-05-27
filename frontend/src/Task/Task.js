@@ -15,6 +15,8 @@ const getItems = (tasks) =>
     description: `${k.description}`,
     hours: `${k.hours}`,
     minutes: `${k.minutes}`,
+    inputHours: 0,
+    inputMinutes: 0,
   }));
 
 // a little function to help us with reordering the result
@@ -57,6 +59,9 @@ export default class Task extends Component {
     };
     this.getCreatedTasks = this.getCreatedTasks.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.handleInputHour = this.handleInputHour.bind(this);
+    this.handleInputMinute = this.handleInputMinute.bind(this);
+    this.updateUserTaskHours = this.updateUserTaskHours.bind(this);
   }
 
   componentDidMount() {
@@ -105,6 +110,75 @@ export default class Task extends Component {
           console.log("error");
         }
       );
+  }
+
+  updateUserTaskHours(up_taskID) {
+    axios
+      .post(
+        "/updateUserTaskHours",
+        {
+          requestUserId   : this.state.user.id,
+          requestTaskId   : up_taskID.replace("item-", ""),
+          requestHours    : this.state.items.find(x => x.id == up_taskID).inputHours,
+          requestMinutes  : this.state.items.find(x => x.id == up_taskID).inputMinutes,
+        }
+      )
+      .then(
+        (res) => {
+          console.log("in the then part");
+          //console.log(res.data);
+          var newitems = this.state.items.slice();
+          //console.log(newitems);
+          //console.log(this.state.items);
+          
+          //console.log(newitems.find(x => x.id == up_taskID).hours);
+          //newitems.find(x => x.id == up_taskID).hours = res.data.hours;
+          //newitems.find(x => x.id == up_taskID).minutes = res.data.minutes;
+          for(var feItem in newitems){
+            console.log(feItem + " feItem");
+            console.log(up_taskID + " uptaskId");
+            if(feItem.id == up_taskID){
+              console.log("is it even going in");
+              feItem.hours = res.data.hours;
+              feItem.minutes = res.data.minutes;
+              break;
+            }
+          }
+
+          // newitems.forEach(function(feItem){
+          //   if(feItem.id == up_taskID){
+          //     feItem.hours = res.data.hours;
+          //     feItem.minutes = res.data.minutes;
+          //     console.log(feItem);
+          //   }
+          // });
+
+          console.log(newitems);
+
+          //console.log("after set res");
+          this.setState({items: newitems});
+          //console.log(newitems);
+          //console.log(newitems.find(x => x.id == up_taskID).hours);
+        }
+      );
+  }
+
+  handleInputHour(taskID, event) {
+    var newitems = this.state.items;
+    if(event.target.value == "")
+      newitems.find(x => x.id == taskID).inputHours = 0;
+    else
+      newitems.find(x => x.id == taskID).inputHours = event.target.value;
+    this.setState({items: newitems});
+  }
+
+  handleInputMinute(taskID, event) {
+    var newitems = this.state.items;
+    if(event.target.value == "")
+      newitems.find(x => x.id == taskID).inputMinutes = 0;
+    else
+      newitems.find(x => x.id == taskID).inputMinutes = event.target.value;
+    this.setState({items: newitems});
   }
 
   displayTasks = () =>
@@ -195,9 +269,9 @@ export default class Task extends Component {
                                   </footer>
                                   <footer>
                                     <div class="card-footer-div"> 
-                                      <input type="number" placeholder="Hours" class="card-footer-item-input"/>
-                                      <input type="number" placeholder="Minutes" class="card-footer-item-input"/>
-                                      <a href="#" class="card-footer-item-bottom">
+                                      <input type="number" onChange={this.handleInputHour.bind(this, item.id)} placeholder="Hours" class="card-footer-item-input"/>
+                                      <input type="number" onChange={this.handleInputMinute.bind(this, item.id)} placeholder="Minutes" class="card-footer-item-input"/>
+                                      <a href="#" class="card-footer-item-bottom" onClick={() => this.updateUserTaskHours(item.id)}>
                                         Submit Hours
                                       </a>
                                     </div>

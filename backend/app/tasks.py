@@ -67,3 +67,37 @@ def getCreatedTasks():
                 'minutes': hmQuery.minutes,
             })
         return jsonify(tasks)
+
+@app.route("/updateUserTaskHours", methods=['POST'])
+def updateUserTaskHours():
+    if request.method == 'POST':
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper POST REQUEST"}), 400
+
+        requestUserId   = request.json.get('requestUserId')
+        requestTaskId   = request.json.get('requestTaskId')
+        requestHours    = request.json.get('requestHours')
+        requestMinutes  = request.json.get('requestMinutes')
+
+        print("hello " + str(requestUserId) + " " + str(requestTaskId) + " " + str(requestHours) + " " + str(requestMinutes))
+
+        try:
+            hmQuery = database.db_session.query(models.UserTask).filter(models.UserTask.taskId == requestTaskId and models.UserTasks.user == requestUserId).first()
+            hmQuery.hours += int(requestHours)
+            hmQuery.minutes += int(requestMinutes)
+
+            if hmQuery.minutes >= 60:
+                OFHours = hmQuery.minutes // 60 #Eg 5//2 = 2
+                hmQuery.minutes = hmQuery.minutes % 60
+                hmQuery.hours += OFHours
+            
+            database.db_session.commit()
+
+            hm = list()
+            hm.append({
+                'hours'     : hmQuery.hours,
+                'minutes'   : hmQuery.minutes,
+            })
+            return jsonify(hm)
+        except:
+            return jsonify({"msg": "Update User Task Error"}), 500
