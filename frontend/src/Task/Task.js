@@ -157,6 +157,7 @@ export default class Task extends Component {
 
           //console.log("after set res");
           this.setState({items: newitems});
+          this.getCreatedTasks();
           //console.log(newitems);
           //console.log(newitems.find(x => x.id == up_taskID).hours);
         }
