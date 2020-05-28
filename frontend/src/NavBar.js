@@ -68,6 +68,16 @@ class NavBar extends Component {
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link has-text-white">Tasks</a>
               <div class="navbar-dropdown">
+              <a
+                  class="navbar-item"
+                  onClick={() => {
+                    this.props.history.push({
+                      pathname: `/Task2`,
+                    });
+                  }}
+                >
+                  View assigned tasks
+                </a>
                 <a
                   class="navbar-item"
                   onClick={() => {
