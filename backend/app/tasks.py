@@ -93,7 +93,7 @@ def getAssignedTasks():
                 models.Tasks.id == assignedTask.taskId).first()
 
             tasks.append({
-                'id': assignedTaskQuery.assignerID,
+                'id': assignedTaskQuery.id,
                 'name': assignedTaskQuery.name,
                 'title': assignedTaskQuery.title,
                 'description': assignedTaskQuery.description,
@@ -139,8 +139,8 @@ def updateUserTaskHours():
         requestHours = request.json.get('requestHours')
         requestMinutes = request.json.get('requestMinutes')
 
-        print("hello " + str(requestUserId) + " " + str(requestTaskId) +
-              " " + str(requestHours) + " " + str(requestMinutes))
+        print("user " + str(requestUserId) + " task " + str(requestTaskId) +
+              " hours " + str(requestHours) + " minutes " + str(requestMinutes))
 
         try:
             hmQuery = database.db_session.query(models.UserTask).filter(

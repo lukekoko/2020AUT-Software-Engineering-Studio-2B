@@ -116,6 +116,7 @@ export default class Task extends Component {
   }
 
   updateUserTaskHours(up_taskID) {
+    console.log(up_taskID);
     axios
       .post("/updateUserTaskHours", {
         requestUserId: this.state.user.id,
@@ -126,7 +127,7 @@ export default class Task extends Component {
           .inputMinutes,
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         this.getAssignedTasks();
       });
   }
