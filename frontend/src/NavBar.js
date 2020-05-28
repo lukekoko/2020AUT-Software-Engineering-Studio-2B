@@ -76,7 +76,7 @@ class NavBar extends Component {
                     });
                   }}
                 >
-                  View assigned tasks
+                  View your assigned tasks
                 </a>
                 <a
                   class="navbar-item"
@@ -86,7 +86,7 @@ class NavBar extends Component {
                     });
                   }}
                 >
-                  View created tasks
+                  View your created tasks
                 </a>
                 <a
                   class="navbar-item"

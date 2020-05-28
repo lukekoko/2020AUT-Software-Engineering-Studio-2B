@@ -7,7 +7,7 @@ import "bulma/css/bulma.css";
 import { getHeaderToken } from "../Authentication/JwtConfig";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-// fake data generator
+// IMPORTANT
 const getItems = (tasks) =>
   tasks.map((k) => ({
     id: `item-${k.id}`,
