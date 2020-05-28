@@ -125,40 +125,8 @@ export default class Task extends Component {
       )
       .then(
         (res) => {
-          console.log("in the then part");
-          //console.log(res.data);
-          var newitems = this.state.items.slice();
-          //console.log(newitems);
-          //console.log(this.state.items);
-          
-          //console.log(newitems.find(x => x.id == up_taskID).hours);
-          //newitems.find(x => x.id == up_taskID).hours = res.data.hours;
-          //newitems.find(x => x.id == up_taskID).minutes = res.data.minutes;
-          for(var feItem in newitems){
-            console.log(feItem + " feItem");
-            console.log(up_taskID + " uptaskId");
-            if(feItem.id == up_taskID){
-              console.log("is it even going in");
-              feItem.hours = res.data.hours;
-              feItem.minutes = res.data.minutes;
-              break;
-            }
-          }
-
-          // newitems.forEach(function(feItem){
-          //   if(feItem.id == up_taskID){
-          //     feItem.hours = res.data.hours;
-          //     feItem.minutes = res.data.minutes;
-          //     console.log(feItem);
-          //   }
-          // });
-
-          console.log(newitems);
-
-          //console.log("after set res");
-          this.setState({items: newitems});
-          //console.log(newitems);
-          //console.log(newitems.find(x => x.id == up_taskID).hours);
+          console.log(res);
+          this.getCreatedTasks();
         }
       );
   }
@@ -269,11 +237,13 @@ export default class Task extends Component {
                                   </footer>
                                   <footer>
                                     <div class="card-footer-div"> 
-                                      <input type="number" onChange={this.handleInputHour.bind(this, item.id)} placeholder="Hours" class="card-footer-item-input"/>
-                                      <input type="number" onChange={this.handleInputMinute.bind(this, item.id)} placeholder="Minutes" class="card-footer-item-input"/>
-                                      <a href="#" class="card-footer-item-bottom" onClick={() => this.updateUserTaskHours(item.id)}>
-                                        Submit Hours
-                                      </a>
+                                    <form onSubmit={function handleSubmit(e){e.preventDefault(); e.target.reset();}}>
+                                        <input type="number" onChange={this.handleInputHour.bind(this, item.id)} placeholder="Hours" class="card-footer-item-input"/>
+                                        <input type="number" onChange={this.handleInputMinute.bind(this, item.id)} placeholder="Minutes" class="card-footer-item-input"/>
+                                        <button type="submit" class="card-footer-item-bottom" onClick={() => this.updateUserTaskHours(item.id)}>
+                                          Submit Hours
+                                        </button>
+                                    </form>
                                     </div>
                                   </footer>
                                 </div>
