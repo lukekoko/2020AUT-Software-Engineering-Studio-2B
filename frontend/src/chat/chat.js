@@ -579,7 +579,7 @@ class Chat extends Component {
             <div
               id="messageDiv"
               class="message-body"
-              style={{ width: "100%", height: "1000px", overflow: "auto" }}
+              style={{ width: "100%", height: "600px", overflow: "auto" }}
             >
               <div class="message-body" style={{}}>
                 {this.state.room === "" && (

@@ -4,9 +4,11 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_socketio import SocketIO
 
+import os
 import pathlib
-logPath = str(pathlib.Path(__file__).resolve().parent) + './config/logger.ini'
+logPath = str(pathlib.Path(__file__).resolve().parent) + '/config/logger.ini'
 
+print(logPath)
 from pathlib import Path
 Path("./logs/").mkdir(parents=True, exist_ok=True)
 
