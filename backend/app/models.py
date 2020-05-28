@@ -6,11 +6,6 @@ from sqlalchemy.dialects.postgresql import ARRAY
 import logging
 logger = logging.getLogger(__name__)
 
-userTasks = Table('userTasks', Base.metadata,
-                  Column('userId', Integer, ForeignKey('users.id')),
-                  Column('taskId', Integer, ForeignKey('tasks.id'))
-                  )
-
 userRooms = Table('userRooms', Base.metadata,
     Column('id', Integer, primary_key=True),
     Column('userId', Integer, ForeignKey('users.id')),
@@ -26,7 +21,7 @@ class User(Base):
     userType = Column(Boolean, unique=False, nullable=False)
     hourlyWage = Column(Float, unique=False, nullable=True)
     managerId = Column(Integer, unique=False, nullable=True)
-    tasks = relationship("Tasks", secondary=userTasks)
+    tasks = relationship("UserTask", back_populates='user')
     timesheets = relationship("Timesheet")
     rooms = relationship("ChatRooms", secondary=userRooms, back_populates='users')
     messages = relationship("Messages")
@@ -62,12 +57,29 @@ class Tasks(Base):
     title = Column(String(150), nullable=False)
     description = Column(String(300), nullable=False)
     assignerID = Column(Integer, unique=False, nullable=True)
+    users = relationship("UserTask", back_populates="tasks")
 
     def __init__(self, name=None, title=None, description=None, assignerID=None ):
             self.name = name
             self.title = title
             self.description = description
             self.assignerID = assignerID
+
+class UserTask(Base):
+    __tablename__ = 'userTasks'
+    id = Column(Integer, primary_key=True)
+    userId = Column(Integer, ForeignKey('users.id'))
+    taskId = Column(Integer, ForeignKey('tasks.id'))
+    hours = Column('hours', Integer, unique=False, nullable=False, default=0)
+    minutes = Column('minutes', Integer, unique=False, nullable=False, default=0)
+    user = relationship("User", back_populates='tasks')
+    tasks = relationship("Tasks", back_populates='users')
+
+    def __init__(self, user=None, tasks=None, hours=None, minutes=None):
+        self.user = user
+        self.tasks = tasks
+        self.hours = hours
+        self.minutes = minutes
 
 class Log(Base):
     __tablename__ = 'logs'

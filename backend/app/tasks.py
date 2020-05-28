@@ -37,7 +37,8 @@ def CreateTask():
             for ID in assignedIDS:
                 print(ID)
                 user = models.User.query.filter_by(id=ID).first()
-                user.tasks.append(task)
+                usertasks = models.UserTask(user, task,0,0) #create associative object first
+                user.tasks.append(usertasks)
                 database.db_session.add(user)
             database.db_session.commit()  # SA will insert a relationship row
         except:
@@ -55,11 +56,48 @@ def getCreatedTasks():
         query = database.db_session.query(models.Tasks).filter(models.Tasks.assignerID == requestUserId).all()
         tasks = list()
         for createdTask in query:
+            hmQuery = database.db_session.query(models.UserTask).filter(models.UserTask.taskId == createdTask.id and models.Tasks.assignerID == requestUserId).first()
             tasks.append({
                 'id': createdTask.id,
                 'name': createdTask.name,
                 'title': createdTask.title,
                 'description': createdTask.description,
                 'assignerID': createdTask.assignerID,
+                'hours': hmQuery.hours,
+                'minutes': hmQuery.minutes,
             })
         return jsonify(tasks)
+
+@app.route("/updateUserTaskHours", methods=['POST'])
+def updateUserTaskHours():
+    if request.method == 'POST':
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper POST REQUEST"}), 400
+
+        requestUserId   = request.json.get('requestUserId')
+        requestTaskId   = request.json.get('requestTaskId')
+        requestHours    = request.json.get('requestHours')
+        requestMinutes  = request.json.get('requestMinutes')
+
+        print("hello " + str(requestUserId) + " " + str(requestTaskId) + " " + str(requestHours) + " " + str(requestMinutes))
+
+        try:
+            hmQuery = database.db_session.query(models.UserTask).filter(models.UserTask.taskId == requestTaskId and models.UserTasks.user == requestUserId).first()
+            hmQuery.hours += int(requestHours)
+            hmQuery.minutes += int(requestMinutes)
+
+            if hmQuery.minutes >= 60:
+                OFHours = hmQuery.minutes // 60 #Eg 5//2 = 2
+                hmQuery.minutes = hmQuery.minutes % 60
+                hmQuery.hours += OFHours
+            
+            database.db_session.commit()
+
+            hm = list()
+            hm.append({
+                'hours'     : hmQuery.hours,
+                'minutes'   : hmQuery.minutes,
+            })
+            return jsonify(hm)
+        except:
+            return jsonify({"msg": "Update User Task Error"}), 500
