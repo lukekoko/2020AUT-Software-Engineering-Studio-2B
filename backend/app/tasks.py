@@ -87,13 +87,13 @@ def getAssignedTasks():
         for assignedTask in query:
 
             hmQuery = database.db_session.query(models.UserTask).filter(
-                models.UserTask.taskId == assignedTask.id and models.Tasks.assignerID == requestUserId).first()
+                models.UserTask.taskId == assignedTask.taskId and models.UserTask.userId == requestUserId).first()
 
             assignedTaskQuery = database.db_session.query(models.Tasks).filter(
-                models.UserTask.taskId == assignedTask.taskId).first()
+                models.Tasks.id == assignedTask.taskId).first()
 
             tasks.append({
-                'id': assignedTaskQuery.id,
+                'id': assignedTaskQuery.assignerID,
                 'name': assignedTaskQuery.name,
                 'title': assignedTaskQuery.title,
                 'description': assignedTaskQuery.description,
