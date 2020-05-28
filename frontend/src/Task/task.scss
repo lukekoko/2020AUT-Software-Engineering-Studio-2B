@@ -122,3 +122,63 @@ i.icon.delete:before {
   width:100%;
   margin-bottom: 15px;
 }
+
+.card-footer {
+  flex-wrap: wrap;
+}
+
+  [data-rbd-droppable-context-id="0"] {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100% !important;
+    background-color: white !important;
+  }
+
+  @media (max-width: 600px){
+    [data-rbd-droppable-context-id="0"] {
+      display: block;
+    }
+    [data-rbd-drag-handle-context-id="0"] {
+      margin-bottom: 30px !important;
+    }
+
+  }
+
+  [data-rbd-drag-handle-context-id="0"] {
+    flex: 0 45%;
+    margin: auto !important;
+    
+  }
+
+.card-footer-item-input {
+  width: 100%;
+  margin: 7px 0;
+  height: 50px;
+}
+
+.card-footer-div {
+  text-align: center;
+}
+
+.card-footer-item-bottom {
+  display: block;
+  width: 100%;
+  background: #0d82df;
+  height: 50px;
+  border-radius: 8px;
+  color: white;
+  line-height: 50px;
+  font-weight: bold;
+  
+}
+
+.card-footer-item-bottom:hover {
+  color: black;
+  text-decoration: none;
+  background-color: white;
+  border: solid 2px #0d82df;
+}
+
+.card-header {
+  background-color: #acb9e3;
+}

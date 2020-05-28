@@ -79,7 +79,7 @@ class Chat extends Component {
     });
 
     socket.on("message", (data) => {
-      console.log(data);
+      // console.log(data);
     });
 
     socket.on("previousMessage", (data) => {
@@ -97,6 +97,31 @@ class Chat extends Component {
     socket.on("success", (data) => {
       if (parseInt(data["userid"]) == parseInt(this.state.userid)) {
         this.getPreviousMessages();
+      }
+    });
+
+    // this is for deleteing and editing messages
+    socket.on("successMessage", (data) => {
+      if (data["userid"].includes(parseInt(this.state.userid))) {
+        this.getPreviousMessages();
+      }
+    });
+
+    // this is for deleteing and editing + rooms
+    socket.on("successRoom", (data) => {
+      if (data["userid"].includes(parseInt(this.state.userid))) {
+        if (data["method"] === "delete") {
+          socket.emit("leave", {
+            username: this.state.username,
+            userid: this.state.userid,
+            room: this.state.room,
+          });
+          this.setState({ room: "", roomDisplay: "", messages: [] });
+          this.getRooms();  
+        } else {
+          this.setState({editRoomName: false})
+          this.getRooms();  
+        }
       }
     });
 
@@ -138,11 +163,6 @@ class Chat extends Component {
               .replace(this.state.username + ", ", "")
               .replace(", " + this.state.username, "");
           }
-          // for (const key of Object.keys(data)) {
-          //   data[key]["name"] = data[key]["name"]
-          //     .replace(this.state.username + ", ", "")
-          //     .replace(", " + this.state.username, "");
-          // }
           this.setState({
             rooms: data,
           });
@@ -207,7 +227,6 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        console.log(res);
       });
   }
 
@@ -228,7 +247,6 @@ class Chat extends Component {
           }
         )
         .then((res) => {
-          console.log(res);
         });
 
       this.enableEditInput(id, false, "none");
@@ -280,8 +298,6 @@ class Chat extends Component {
         (res) => {
           this.getRooms();
           this.setState({selectedUsersForCreatingRoom: []});
-          // this.state.selectedUsersForCreatingRoom.length = 0;
-          // this.dropdownlist.current.dropdown('clear');
         },
         (error) => {
           alert("Room with these users is already created", error);
@@ -322,8 +338,6 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        this.setState({ room: "", roomDisplay: "", messages: [] });
-        this.getRooms();
       });
   }
 
@@ -334,7 +348,6 @@ class Chat extends Component {
   }
 
   editRoomName(event) {
-    console.log(this.state.roomDisplay);
     axios
       .post(
         "/rooms/edit",
@@ -344,16 +357,13 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        console.log(res);
-        this.setState({editRoomName: false})
-        this.getRooms();
       });
     event.preventDefault();
   }
 
   displayMessages = () =>
     this.state.messages.map((item, i) => (
-      <div class="columns is-vcentered is-flex is-centered">
+      <div class="columns is-vcentered is-flex is-centered" key={item.id + item.time}>
         <div class="column is-narrow">
           <figure
             class="image is-64x64"

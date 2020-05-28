@@ -13,6 +13,10 @@ const getItems = (tasks) =>
     title: `${k.title}`,
     name: `${k.name}`,
     description: `${k.description}`,
+    hours: `${k.hours}`,
+    minutes: `${k.minutes}`,
+    inputHours: 0,
+    inputMinutes: 0,
   }));
 
 // a little function to help us with reordering the result
@@ -55,6 +59,9 @@ export default class Task extends Component {
     };
     this.getCreatedTasks = this.getCreatedTasks.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.handleInputHour = this.handleInputHour.bind(this);
+    this.handleInputMinute = this.handleInputMinute.bind(this);
+    this.updateUserTaskHours = this.updateUserTaskHours.bind(this);
   }
 
   componentDidMount() {
@@ -103,6 +110,43 @@ export default class Task extends Component {
           console.log("error");
         }
       );
+  }
+
+  updateUserTaskHours(up_taskID) {
+    axios
+      .post(
+        "/updateUserTaskHours",
+        {
+          requestUserId   : this.state.user.id,
+          requestTaskId   : up_taskID.replace("item-", ""),
+          requestHours    : this.state.items.find(x => x.id == up_taskID).inputHours,
+          requestMinutes  : this.state.items.find(x => x.id == up_taskID).inputMinutes,
+        }
+      )
+      .then(
+        (res) => {
+          console.log(res);
+          this.getCreatedTasks();
+        }
+      );
+  }
+
+  handleInputHour(taskID, event) {
+    var newitems = this.state.items;
+    if(event.target.value == "")
+      newitems.find(x => x.id == taskID).inputHours = 0;
+    else
+      newitems.find(x => x.id == taskID).inputHours = event.target.value;
+    this.setState({items: newitems});
+  }
+
+  handleInputMinute(taskID, event) {
+    var newitems = this.state.items;
+    if(event.target.value == "")
+      newitems.find(x => x.id == taskID).inputMinutes = 0;
+    else
+      newitems.find(x => x.id == taskID).inputMinutes = event.target.value;
+    this.setState({items: newitems});
   }
 
   displayTasks = () =>
@@ -176,6 +220,9 @@ export default class Task extends Component {
                                     <div class="content">
                                       {item.description}
                                     </div>
+                                    <div class="content">
+                                      Logged Time: {item.hours} hours {item.minutes} minutes
+                                    </div>
                                   </div>
                                   <footer class="card-footer">
                                     <a href="#" class="card-footer-item">
@@ -187,6 +234,17 @@ export default class Task extends Component {
                                     <a href="#" class="card-footer-item">
                                       Action3
                                     </a>
+                                  </footer>
+                                  <footer>
+                                    <div class="card-footer-div"> 
+                                    <form onSubmit={function handleSubmit(e){e.preventDefault(); e.target.reset();}}>
+                                        <input type="number" onChange={this.handleInputHour.bind(this, item.id)} placeholder="Hours" class="card-footer-item-input"/>
+                                        <input type="number" onChange={this.handleInputMinute.bind(this, item.id)} placeholder="Minutes" class="card-footer-item-input"/>
+                                        <button type="submit" class="card-footer-item-bottom" onClick={() => this.updateUserTaskHours(item.id)}>
+                                          Submit Hours
+                                        </button>
+                                    </form>
+                                    </div>
                                   </footer>
                                 </div>
                               )}
