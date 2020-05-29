@@ -76,7 +76,10 @@ export default class Home extends Component {
  */
 id2List = {
     droppable: 'items',
+    droppable3: 'selected',
     droppable2: 'selected'
+
+    
 };
 
 getList = id => this.state[this.id2List[id]];
@@ -103,6 +106,7 @@ onDragEnd = result => {
         }
 
         this.setState(state);
+
     } else {
         const result = move(
             this.getList(source.droppableId),
