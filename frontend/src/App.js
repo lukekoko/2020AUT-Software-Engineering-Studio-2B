@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import Login from './Authentication/login';
 import Home from './Home';
+import List from './TeamList/TeamList';
 import Register from './Authentication/Register';
 import Chat from './chat/chat';
 import AuthenticationGuard from './Authentication/AuthenticationGuard';
