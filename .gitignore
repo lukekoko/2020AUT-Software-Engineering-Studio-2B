@@ -27,3 +27,4 @@ venv
 .vscode
 *.pyc
 *.db
+/.vs/slnx.sqlite
