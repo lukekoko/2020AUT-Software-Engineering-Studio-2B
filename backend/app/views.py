@@ -38,7 +38,7 @@ def getUsers():
 @jwt_required
 def getTeams():
     teamSchema = schemas.TeamSchema
-    teams = models.Team.query.with_entities(models.Team.id, models.Team.name, models.Team.leaderId).all()
+    teams = models.Team.query.with_entities(models.Team.id, models.Team.name, models.Team.leaderId).join(models.teamUsers).all()
 
     print(teams)
     return jsonify([teamSchema.from_orm(team).dict() for team in teams])
