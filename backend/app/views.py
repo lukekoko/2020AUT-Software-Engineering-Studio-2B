@@ -38,10 +38,17 @@ def getUsers():
 @jwt_required
 def getTeams():
     teamSchema = schemas.TeamSchema
-    teams = models.Team.query.with_entities(models.Team.id, models.Team.name, models.Team.leaderId).join(models.teamUsers).all()
-
-    print(teams)
-    return jsonify([teamSchema.from_orm(team).dict() for team in teams])
+    teams = models.Team.query.join(models.teamUsers).all()
+    teamList = []
+    for team in teams:
+        teamList.append({
+          'name': team.name,
+          'leader': team.leaderId,
+          'users': [{"id": user.id, "name": user.name, "email": user.email} for user in team.users],
+          'tasks': [{"name": task.name, "desc": task.description} for task in team.tasks]
+        })
+        
+    return jsonify(teamList), 200
 
 # Post call to add teams to database
 @app.route('/addTeams', methods=['POST'])

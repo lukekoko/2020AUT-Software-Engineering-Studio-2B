@@ -33,6 +33,9 @@ from app import views, models, auth, chat
 def populate_db():
     user = models.User(name="test", email="test@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=0)
     database.db_session.add(user)
+    team  = models.Team(name="team1", leaderId=1)
+    team.users.append(user)
+    database.db_session.add(team)
     database.db_session.commit()
 
 # populate_db() # fill db with test user
