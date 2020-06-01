@@ -9,7 +9,7 @@ import Task from "./Task/Task";
 import AuthenticationGuard from './Authentication/AuthenticationGuard';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import 'bulma/css/bulma.css'
-import { Calendar } from "react-big-calendar";
+import  myCalendar  from './Calendar/calendar'
 
 
 
@@ -27,7 +27,7 @@ export default class App extends Component {
           <AuthenticationGuard>
             <Route path={'/Home'} component={Home} />
             <Route path={'/chat'} component={Chat} />
-            <Route path={'/calendar'} component={Calendar} />
+            <Route path={'/calendar'} component={myCalendar} />
             <Route path={'/CreateTask'} component={CreateTask} />
             <Route path={"/Task"} component={Task} />
           </AuthenticationGuard>
