@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\app",
+    "\\backend\\app\\__pycache__",
+    "\\frontend",
+    "\\frontend\\src",
+    "\\frontend\\src\\Authentication",
+    "\\frontend\\src\\styles",
+    "\\frontend\\src\\Task",
+    "\\frontend\\src\\TeamList"
+  ],
+  "SelectedNode": "\\backend\\app\\views.py",
+  "PreviewInSolutionExplorer": false
+}

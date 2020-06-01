@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
+import TeamList from "././TeamList/TeamList.js";
 import Cookies from "js-cookie";
 import "./Task/Home.scss";
 //import { getHeaderToken } from "../Authentication/JwtConfig";
@@ -156,70 +157,7 @@ export default class Home extends Component {
                 <h1 class="title">Main Board</h1>
                 <p>Email: {this.state.user.email}</p>
                 <p>Name: {this.state.user.name}</p>
-
-
-                {this.state.tasks.length == 0 ? (
-                  "No Tasks"
-                ) : (
-                  <DragDropContext onDragEnd={this.onDragEnd}>
-                    <Droppable droppableId="droppable">
-                      {(provided, snapshot) => (
-                        <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          style={getListStyle(snapshot.isDraggingOver)}
-                        >
-                          {this.state.items.map((item, index) => (
-                            <Draggable
-                              key={item.id}
-                              draggableId={item.id}
-                              index={index}
-                            >
-                              {(provided, snapshot) => (
-                                <div
-                                  class="card"
-                                  key={item.id}
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  style={getItemStyle(
-                                    snapshot.isDragging,
-                                    provided.draggableProps.style
-                                  )}
-                                >
-                                  <header class="card-header">
-                                    <p class="card-header-title">
-                                      {item.title}
-                                    </p>
-                                  </header>
-                                  <div class="card-content">
-                                    <div class="content">
-                                      {item.description}
-                                    </div>
-                                  </div>
-                                  <footer class="card-footer">
-                                    <a href="#" class="card-footer-item">
-                                      Action1
-                                    </a>
-                                    <a href="#" class="card-footer-item">
-                                      Action2
-                                    </a>
-                                    <a href="#" class="card-footer-item">
-                                      Action3
-                                    </a>
-                                  </footer>
-                                </div>
-                              )}
-                            </Draggable>
-                          ))}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  </DragDropContext>
-                )}
-
-
+                <TeamList />
               </div>
             </div>
           </section>
