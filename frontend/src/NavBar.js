@@ -101,6 +101,16 @@ class NavBar extends Component {
             >
               Chat
             </a>
+            <a
+              class="navbar-item has-text-white"
+              onClick={() => {
+                this.props.history.push({
+                  pathname: `/teamsList`,
+                });
+              }}
+            >
+              teamsList
+            </a>
             <a class="navbar-item has-text-white">Calendar</a>
           </div>
           <div class="navbar-end">
