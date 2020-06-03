@@ -32,5 +32,5 @@ def protected():
 @jwt_required
 def getUsers():
     userSchema = schemas.UserSchema
-    users = models.User.query.with_entities(models.User.id, models.User.name, models.User.email).all()
+    users = models.User.query.with_entities(models.User.id, models.User.name, models.User.email, models.User.userType).all()
     return jsonify([userSchema.from_orm(user).dict() for user in users])

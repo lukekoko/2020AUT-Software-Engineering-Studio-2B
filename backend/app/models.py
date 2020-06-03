@@ -14,13 +14,13 @@ userRooms = Table('userRooms', Base.metadata,
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
+    id =  Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     email = Column(String(120), unique=True, nullable=False)
     password = Column(String(100), unique=False, nullable=False)
     userType = Column(Boolean, unique=False, nullable=False)
     hourlyWage = Column(Float, unique=False, nullable=True)
-    managerId = Column(Integer, unique=False, nullable=True)
+    managerId = Column(Integer,unique=False, nullable=True)
     tasks = relationship("UserTask", back_populates='user')
     timesheets = relationship("Timesheet")
     rooms = relationship("ChatRooms", secondary=userRooms, back_populates='users')
