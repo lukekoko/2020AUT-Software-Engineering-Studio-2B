@@ -62,6 +62,9 @@ def addTeam():
         users = request.json.get('users')
         tasks = request.json.get('tasks')
 
+        if (models.User.query.filter_by(name=name).first() != None):
+          return jsonify({"msg": "Team already exists with that name"}), 400
+
         team = models.Team(name=name, leaderId=leaderId)
         print(team.users)
 
