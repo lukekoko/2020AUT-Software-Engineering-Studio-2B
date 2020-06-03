@@ -1,22 +1,25 @@
+//SHOWS THE ASSINGED TASKS TO THE CURRENT USER
+
+//SHOWS THE CREATED TASKS BY THE CURRENT USER
 import React, { Component } from "react";
-//import ReactDOM from "react-dom";
+import Navbar from "../NavBar";
+import "./Home.scss";
 import axios from "axios";
-import { getHeaderToken } from "./Authentication/JwtConfig";
-import Navbar from "./NavBar";
-import TeamList from "./TeamList/TeamsList";
-import Cookies from "js-cookie";
-import "./Task/Home.scss";
-//import { getHeaderToken } from "../Authentication/JwtConfig";
+import "bulma/css/bulma.css";
+import { getHeaderToken } from "../Authentication/JwtConfig";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-
-// fake data generator
+// IMPORTANT
 const getItems = (tasks) =>
   tasks.map((k) => ({
     id: `item-${k.id}`,
     title: `${k.title}`,
     name: `${k.name}`,
     description: `${k.description}`,
+    hours: `${k.hours}`,
+    minutes: `${k.minutes}`,
+    inputHours: 0,
+    inputMinutes: 0,
   }));
 
 // a little function to help us with reordering the result
@@ -49,8 +52,7 @@ const getListStyle = (isDraggingOver) => ({
   width: "30%",
 });
 
-
-export default class Home extends Component {
+export default class Task extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,19 +60,11 @@ export default class Home extends Component {
       tasks: [],
       items: [],
     };
-    this.getCreatedTasks = this.getCreatedTasks.bind(this);
+    this.getAssignedTasks = this.getAssignedTasks.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
-  
-    // axios
-    //   .get("/protected", { headers: { Authorization: getHeaderToken() } })
-    //   .then((res) => {
-    //     this.setState({
-    //       user: res.data,
-    //     });
-    //     Cookies.set("username", res.data['name']);
-    //     Cookies.set("userid", res.data['id']);
-    //     this.getCreatedTasks();
-    //   });
+    this.handleInputHour = this.handleInputHour.bind(this);
+    this.handleInputMinute = this.handleInputMinute.bind(this);
+    this.updateUserTaskHours = this.updateUserTaskHours.bind(this);
   }
 
   componentDidMount() {
@@ -80,9 +74,7 @@ export default class Home extends Component {
         this.setState({
           user: res.data,
         });
-        Cookies.set("username", res.data['name']);
-        Cookies.set("userid", res.data['id']);
-        this.getCreatedTasks();
+        this.getAssignedTasks();
       });
   }
 
@@ -103,10 +95,10 @@ export default class Home extends Component {
     });
   }
 
-  getCreatedTasks() {
+  getAssignedTasks() {
     axios
       .post(
-        "/getCreatedTasks",
+        "/getAssignedTasks",
 
         {
           requestUserId: this.state.user.id,
@@ -121,6 +113,39 @@ export default class Home extends Component {
           console.log("error");
         }
       );
+  }
+
+  updateUserTaskHours(up_taskID) {
+    console.log(up_taskID);
+    axios
+      .post("/updateUserTaskHours", {
+        requestUserId: this.state.user.id,
+        requestTaskId: up_taskID.replace("item-", ""),
+        requestHours: this.state.items.find((x) => x.id == up_taskID)
+          .inputHours,
+        requestMinutes: this.state.items.find((x) => x.id == up_taskID)
+          .inputMinutes,
+      })
+      .then((res) => {
+        console.log(res.data);
+        this.getAssignedTasks();
+      });
+  }
+
+  handleInputHour(taskID, event) {
+    var newitems = this.state.items;
+    if (event.target.value == "")
+      newitems.find((x) => x.id == taskID).inputHours = 0;
+    else newitems.find((x) => x.id == taskID).inputHours = event.target.value;
+    this.setState({ items: newitems });
+  }
+
+  handleInputMinute(taskID, event) {
+    var newitems = this.state.items;
+    if (event.target.value == "")
+      newitems.find((x) => x.id == taskID).inputMinutes = 0;
+    else newitems.find((x) => x.id == taskID).inputMinutes = event.target.value;
+    this.setState({ items: newitems });
   }
 
   displayTasks = () =>
@@ -154,11 +179,7 @@ export default class Home extends Component {
           <section class="hero">
             <div class="hero-body">
               <div>
-                <h1 class="title">Main Board</h1>
-                <p>Email: {this.state.user.email}</p>
-                <p>Name: {this.state.user.name}</p>
-
-                
+                <h1 class="title"> Your Assigned Tasks Page</h1>
                 {this.state.tasks.length == 0 ? (
                   "No Tasks"
                 ) : (
@@ -197,6 +218,10 @@ export default class Home extends Component {
                                     <div class="content">
                                       {item.description}
                                     </div>
+                                    <div class="content">
+                                      Logged Time: {item.hours} hours{" "}
+                                      {item.minutes} minutes
+                                    </div>
                                   </div>
                                   <footer class="card-footer">
                                     <a href="#" class="card-footer-item">
@@ -209,6 +234,44 @@ export default class Home extends Component {
                                       Action3
                                     </a>
                                   </footer>
+                                  <footer>
+                                    <div class="card-footer-div">
+                                      <form
+                                        onSubmit={function handleSubmit(e) {
+                                          e.preventDefault();
+                                          e.target.reset();
+                                        }}
+                                      >
+                                        <input
+                                          type="number"
+                                          onChange={this.handleInputHour.bind(
+                                            this,
+                                            item.id
+                                          )}
+                                          placeholder="Hours"
+                                          class="card-footer-item-input"
+                                        />
+                                        <input
+                                          type="number"
+                                          onChange={this.handleInputMinute.bind(
+                                            this,
+                                            item.id
+                                          )}
+                                          placeholder="Minutes"
+                                          class="card-footer-item-input"
+                                        />
+                                        <button
+                                          type="submit"
+                                          class="card-footer-item-bottom"
+                                          onClick={() =>
+                                            this.updateUserTaskHours(item.id)
+                                          }
+                                        >
+                                          Submit Hours
+                                        </button>
+                                      </form>
+                                    </div>
+                                  </footer>
                                 </div>
                               )}
                             </Draggable>
@@ -219,7 +282,6 @@ export default class Home extends Component {
                     </Droppable>
                   </DragDropContext>
                 )}
-
               </div>
             </div>
           </section>

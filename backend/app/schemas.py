@@ -7,11 +7,19 @@ class UserSchema(BaseModel):
     id: int
     name: str
     email: EmailStr
-    userType: int
+    userType: bool
 
     class Config:
         orm_mode = True
 
+class RoomSchema(BaseModel):
+    id: int
+    name: str
+    roomName: str
+
+    class Config:
+        orm_mode = True
+        
 class TeamSchema(BaseModel):
     id: int
     name: str

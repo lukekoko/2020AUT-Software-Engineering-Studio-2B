@@ -1,3 +1,4 @@
+//SHOWS THE CREATED TASKS BY THE CURRENT USER
 import React, { Component } from "react";
 import Navbar from "../NavBar";
 import "./Home.scss";
@@ -6,7 +7,7 @@ import "bulma/css/bulma.css";
 import { getHeaderToken } from "../Authentication/JwtConfig";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-// fake data generator
+// IMPORTANT
 const getItems = (tasks) =>
   tasks.map((k) => ({
     id: `item-${k.id}`,
@@ -125,7 +126,7 @@ export default class Task extends Component {
       )
       .then(
         (res) => {
-          console.log(res);
+          console.log(res.data);
           this.getCreatedTasks();
         }
       );
@@ -180,7 +181,7 @@ export default class Task extends Component {
           <section class="hero">
             <div class="hero-body">
               <div>
-                <h1 class="title">Tasks Page</h1>
+                <h1 class="title">Your Created Tasks Page</h1>
 
                 {this.state.tasks.length == 0 ? (
                   "No Tasks"
