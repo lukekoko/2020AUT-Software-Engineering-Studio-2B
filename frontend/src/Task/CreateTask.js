@@ -86,7 +86,7 @@ class CreateTask extends Component {
       this.state.title,
       this.state.description,
       this.state.user["id"],
-      this.state.selectedUsersIDs
+      this.state.selectedUsers
     );
     axios
       .post("/createTask", {

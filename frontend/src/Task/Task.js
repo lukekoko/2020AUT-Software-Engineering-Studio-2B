@@ -2,10 +2,12 @@
 import React, { Component } from "react";
 import Navbar from "../NavBar";
 import "./Home.scss";
+import "./task.scss";
 import axios from "axios";
 import "bulma/css/bulma.css";
 import { getHeaderToken } from "../Authentication/JwtConfig";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Card } from "semantic-ui-react";
 
 // IMPORTANT
 const getItems = (tasks) =>
@@ -15,10 +17,6 @@ const getItems = (tasks) =>
     name: `${k.name}`,
     description: `${k.description}`,
     assignedIDS: `${k.assignedIDS}`,
-    hours: `${k.hours}`,
-    minutes: `${k.minutes}`,
-    inputHours: "",
-    inputMinutes: "",
   }));
 
 // a little function to help us with reordering the result
@@ -169,14 +167,15 @@ export default class Task extends Component {
           <div class="content">{task.assignedIDS}</div>
         </div>
         <footer class="card-footer">
-          <a href="#" class="card-footer-item">
-            Action1
+          <a href="#" class="card-footer-item" onClick={this.changePriority}>
+            <div> {this.state.on && <h1> Hey</h1>} </div>
+            Priority
           </a>
           <a href="#" class="card-footer-item">
-            Action2
+            Stage
           </a>
           <a href="#" class="card-footer-item">
-            Action3
+            Due Date
           </a>
         </footer>
       </div>
@@ -238,15 +237,25 @@ export default class Task extends Component {
                                       {item.minutes} minutes
                                     </div>
                                   </div>
+                                  <div class="card-content">
+                                    <div class="content">
+                                      <p>ASSIGNEE:</p>
+                                      {item.assignedIDS}
+                                    </div>
+                                  </div>
                                   <footer class="card-footer">
-                                    <a href="#" class="card-footer-item">
-                                      Action1
+                                    <a
+                                      href="#"
+                                      class="card-footer-item"
+                                      onClick={this.priorityColourHandler}
+                                    >
+                                      Priority
                                     </a>
                                     <a href="#" class="card-footer-item">
-                                      Action2
+                                      Stage
                                     </a>
                                     <a href="#" class="card-footer-item">
-                                      Action3
+                                      Due Date
                                     </a>
                                   </footer>
                                   <footer>
