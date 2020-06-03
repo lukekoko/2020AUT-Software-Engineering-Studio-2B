@@ -89,7 +89,7 @@ def addTeam():
 
 # Post call to update specific team
 @app.route('/updateTeam', methods=['POST'])
-def addTeam():
+def updateTeam():
     if request.method == 'POST':
         if not request.is_json:
             return jsonify({"msg": "Not a proper JSON"}), 400
