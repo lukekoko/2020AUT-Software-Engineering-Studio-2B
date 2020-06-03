@@ -7,6 +7,7 @@ import Register from './Authentication/Register';
 import Chat from './chat/chat';
 import CreateTask from './Task/CreateTask';
 import Task from "./Task/Task";
+import Task2 from "./Task/Task2";
 import AuthenticationGuard from './Authentication/AuthenticationGuard';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import 'bulma/css/bulma.css'
@@ -29,6 +30,8 @@ export default class App extends Component {
             <Route path={'/chat'} component={Chat} />
             <Route path={'/CreateTask'} component={CreateTask} />
             <Route path={"/Task"} component={Task} />
+            <Route path={"/Task2"} component={Task2} />
+
           </AuthenticationGuard>
         </Switch>
       </BrowserRouter>

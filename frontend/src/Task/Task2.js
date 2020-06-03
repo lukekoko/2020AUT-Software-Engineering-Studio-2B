@@ -1,3 +1,5 @@
+//SHOWS THE ASSINGED TASKS TO THE CURRENT USER
+
 //SHOWS THE CREATED TASKS BY THE CURRENT USER
 import React, { Component } from "react";
 import Navbar from "../NavBar";
@@ -58,7 +60,7 @@ export default class Task extends Component {
       tasks: [],
       items: [],
     };
-    this.getCreatedTasks = this.getCreatedTasks.bind(this);
+    this.getAssignedTasks = this.getAssignedTasks.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.handleInputHour = this.handleInputHour.bind(this);
     this.handleInputMinute = this.handleInputMinute.bind(this);
@@ -72,7 +74,7 @@ export default class Task extends Component {
         this.setState({
           user: res.data,
         });
-        this.getCreatedTasks();
+        this.getAssignedTasks();
       });
   }
 
@@ -93,10 +95,10 @@ export default class Task extends Component {
     });
   }
 
-  getCreatedTasks() {
+  getAssignedTasks() {
     axios
       .post(
-        "/getCreatedTasks",
+        "/getAssignedTasks",
 
         {
           requestUserId: this.state.user.id,
@@ -114,40 +116,36 @@ export default class Task extends Component {
   }
 
   updateUserTaskHours(up_taskID) {
+    console.log(up_taskID);
     axios
-      .post(
-        "/updateUserTaskHours",
-        {
-          requestUserId   : this.state.user.id,
-          requestTaskId   : up_taskID.replace("item-", ""),
-          requestHours    : this.state.items.find(x => x.id == up_taskID).inputHours,
-          requestMinutes  : this.state.items.find(x => x.id == up_taskID).inputMinutes,
-        }
-      )
-      .then(
-        (res) => {
-          console.log(res.data);
-          this.getCreatedTasks();
-        }
-      );
+      .post("/updateUserTaskHours", {
+        requestUserId: this.state.user.id,
+        requestTaskId: up_taskID.replace("item-", ""),
+        requestHours: this.state.items.find((x) => x.id == up_taskID)
+          .inputHours,
+        requestMinutes: this.state.items.find((x) => x.id == up_taskID)
+          .inputMinutes,
+      })
+      .then((res) => {
+        console.log(res.data);
+        this.getAssignedTasks();
+      });
   }
 
   handleInputHour(taskID, event) {
     var newitems = this.state.items;
-    if(event.target.value == "")
-      newitems.find(x => x.id == taskID).inputHours = 0;
-    else
-      newitems.find(x => x.id == taskID).inputHours = event.target.value;
-    this.setState({items: newitems});
+    if (event.target.value == "")
+      newitems.find((x) => x.id == taskID).inputHours = 0;
+    else newitems.find((x) => x.id == taskID).inputHours = event.target.value;
+    this.setState({ items: newitems });
   }
 
   handleInputMinute(taskID, event) {
     var newitems = this.state.items;
-    if(event.target.value == "")
-      newitems.find(x => x.id == taskID).inputMinutes = 0;
-    else
-      newitems.find(x => x.id == taskID).inputMinutes = event.target.value;
-    this.setState({items: newitems});
+    if (event.target.value == "")
+      newitems.find((x) => x.id == taskID).inputMinutes = 0;
+    else newitems.find((x) => x.id == taskID).inputMinutes = event.target.value;
+    this.setState({ items: newitems });
   }
 
   displayTasks = () =>
@@ -181,8 +179,7 @@ export default class Task extends Component {
           <section class="hero">
             <div class="hero-body">
               <div>
-                <h1 class="title">Your Created Tasks Page</h1>
-
+                <h1 class="title"> Your Assigned Tasks Page</h1>
                 {this.state.tasks.length == 0 ? (
                   "No Tasks"
                 ) : (
@@ -222,7 +219,8 @@ export default class Task extends Component {
                                       {item.description}
                                     </div>
                                     <div class="content">
-                                      Logged Time: {item.hours} hours {item.minutes} minutes
+                                      Logged Time: {item.hours} hours{" "}
+                                      {item.minutes} minutes
                                     </div>
                                   </div>
                                   <footer class="card-footer">
@@ -237,14 +235,41 @@ export default class Task extends Component {
                                     </a>
                                   </footer>
                                   <footer>
-                                    <div class="card-footer-div"> 
-                                    <form onSubmit={function handleSubmit(e){e.preventDefault(); e.target.reset();}}>
-                                        <input type="number" onChange={this.handleInputHour.bind(this, item.id)} placeholder="Hours" class="card-footer-item-input"/>
-                                        <input type="number" onChange={this.handleInputMinute.bind(this, item.id)} placeholder="Minutes" class="card-footer-item-input"/>
-                                        <button type="submit" class="card-footer-item-bottom" onClick={() => this.updateUserTaskHours(item.id)}>
+                                    <div class="card-footer-div">
+                                      <form
+                                        onSubmit={function handleSubmit(e) {
+                                          e.preventDefault();
+                                          e.target.reset();
+                                        }}
+                                      >
+                                        <input
+                                          type="number"
+                                          onChange={this.handleInputHour.bind(
+                                            this,
+                                            item.id
+                                          )}
+                                          placeholder="Hours"
+                                          class="card-footer-item-input"
+                                        />
+                                        <input
+                                          type="number"
+                                          onChange={this.handleInputMinute.bind(
+                                            this,
+                                            item.id
+                                          )}
+                                          placeholder="Minutes"
+                                          class="card-footer-item-input"
+                                        />
+                                        <button
+                                          type="submit"
+                                          class="card-footer-item-bottom"
+                                          onClick={() =>
+                                            this.updateUserTaskHours(item.id)
+                                          }
+                                        >
                                           Submit Hours
                                         </button>
-                                    </form>
+                                      </form>
                                     </div>
                                   </footer>
                                 </div>
