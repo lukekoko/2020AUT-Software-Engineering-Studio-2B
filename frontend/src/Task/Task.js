@@ -230,17 +230,12 @@ export default class Task extends Component {
                                       {item.description}
                                     </div>
                                     <div class="content">
+                                      <p>ASSIGNEE:</p>
                                       {item.assignedIDS}
                                     </div>
                                     <div class="content">
                                       Logged Time: {item.hours} hours{" "}
                                       {item.minutes} minutes
-                                    </div>
-                                  </div>
-                                  <div class="card-content">
-                                    <div class="content">
-                                      <p>ASSIGNEE:</p>
-                                      {item.assignedIDS}
                                     </div>
                                   </div>
                                   <footer class="card-footer">
@@ -249,13 +244,13 @@ export default class Task extends Component {
                                       class="card-footer-item"
                                       onClick={this.priorityColourHandler}
                                     >
-                                      Priority
+                                      High
                                     </a>
                                     <a href="#" class="card-footer-item">
-                                      Stage
+                                      Medium
                                     </a>
                                     <a href="#" class="card-footer-item">
-                                      Due Date
+                                      Low
                                     </a>
                                   </footer>
                                   <footer>

@@ -118,8 +118,8 @@ i.icon.delete:before {
   content: "\f00d";
 }
 
-.card{
-  width:100%;
+.card {
+  width: 100%;
   margin-bottom: 15px;
 }
 
@@ -127,28 +127,26 @@ i.icon.delete:before {
   flex-wrap: wrap;
 }
 
+[data-rbd-droppable-context-id="0"] {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100% !important;
+  background-color: white !important;
+}
+
+@media (max-width: 600px) {
   [data-rbd-droppable-context-id="0"] {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100% !important;
-    background-color: white !important;
+    display: block;
   }
-
-  @media (max-width: 600px){
-    [data-rbd-droppable-context-id="0"] {
-      display: block;
-    }
-    [data-rbd-drag-handle-context-id="0"] {
-      margin-bottom: 30px !important;
-    }
-
-  }
-
   [data-rbd-drag-handle-context-id="0"] {
-    flex: 0 45%;
-    margin: auto !important;
-    
+    margin-bottom: 30px !important;
   }
+}
+
+[data-rbd-drag-handle-context-id="0"] {
+  flex: 0 45%;
+  margin: auto !important;
+}
 
 .card-footer-item-input {
   width: 100%;
@@ -169,7 +167,6 @@ i.icon.delete:before {
   color: white;
   line-height: 50px;
   font-weight: bold;
-  
 }
 
 .card-footer-item-bottom:hover {
