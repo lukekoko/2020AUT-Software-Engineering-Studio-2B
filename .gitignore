@@ -28,3 +28,5 @@ venv
 *.pyc
 *.db
 backend/logs/.log*
+/.vs/slnx.sqlite
+.vs
