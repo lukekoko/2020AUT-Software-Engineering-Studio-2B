@@ -83,3 +83,36 @@ def addTeam():
             print(e)
             return jsonify({"msg": "Cannot add team"}), 401
         return jsonify(token), 200
+
+# Post call to update specific team
+@app.route('/updateTeam', methods=['POST'])
+def addTeam():
+    if request.method == 'POST':
+        if not request.is_json:
+            return jsonify({"msg": "Not a proper JSON"}), 400
+        teamId = request.json.get('id')
+        leaderId = request.json.get('leaderId')
+        users = request.json.get('users')
+        tasks = request.json.get('tasks')
+
+        teamToUpdate = models.Team.query.filter_by(id=teamId).first()
+
+        if (leaderId != None):
+          teamToUpdate.leaderId = leaderId
+
+        if (users != None):
+          teamToUpdate.users = users
+
+        if (tasks != None):
+          teamToUpdate.tasks = tasks
+
+        try:
+            database.db_session.commit()
+
+            token = {
+            'access_token': create_access_token(identity={'id': team.id, 'name': team.name, 'leaderId': team.leaderId}),
+            }
+        except Exception as e:
+            print(e)
+            return jsonify({"msg": "Cannot update team"}), 401
+        return jsonify(token), 200
