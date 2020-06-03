@@ -16,8 +16,8 @@ const getItems = (tasks) =>
     description: `${k.description}`,
     hours: `${k.hours}`,
     minutes: `${k.minutes}`,
-    inputHours: 0,
-    inputMinutes: 0,
+    inputHours: "",
+    inputMinutes: "",
   }));
 
 // a little function to help us with reordering the result
@@ -114,19 +114,27 @@ export default class Task extends Component {
   }
 
   updateUserTaskHours(up_taskID) {
+    var newItems = this.state.items;
+    var iHours = parseInt(newItems.find(x => x.id == up_taskID).inputHours);
+    var iMinutes = parseInt(newItems.find(x => x.id == up_taskID).inputMinutes);
+    
+    if(isNaN(iHours) == true){
+      iHours = 0; }
+    if(isNaN(iMinutes) == true){
+      iMinutes = 0;}
+
     axios
       .post(
         "/updateUserTaskHours",
         {
           requestUserId   : this.state.user.id,
           requestTaskId   : up_taskID.replace("item-", ""),
-          requestHours    : this.state.items.find(x => x.id == up_taskID).inputHours,
-          requestMinutes  : this.state.items.find(x => x.id == up_taskID).inputMinutes,
+          requestHours    : iHours,
+          requestMinutes  : iMinutes,
         }
       )
       .then(
         (res) => {
-          console.log(res.data);
           this.getCreatedTasks();
         }
       );
@@ -134,20 +142,18 @@ export default class Task extends Component {
 
   handleInputHour(taskID, event) {
     var newitems = this.state.items;
-    if(event.target.value == "")
-      newitems.find(x => x.id == taskID).inputHours = 0;
-    else
-      newitems.find(x => x.id == taskID).inputHours = event.target.value;
+    newitems.find(x => x.id == taskID).inputHours = event.target.value;
     this.setState({items: newitems});
+    console.log("inputhours");
+    console.log(newitems.find(x => x.id == taskID).inputHours);
   }
 
   handleInputMinute(taskID, event) {
     var newitems = this.state.items;
-    if(event.target.value == "")
-      newitems.find(x => x.id == taskID).inputMinutes = 0;
-    else
-      newitems.find(x => x.id == taskID).inputMinutes = event.target.value;
+    newitems.find(x => x.id == taskID).inputMinutes = event.target.value;
     this.setState({items: newitems});
+    console.log("inputminutes");
+    console.log(newitems.find(x => x.id == taskID).inputMinutes);
   }
 
   displayTasks = () =>
@@ -239,8 +245,8 @@ export default class Task extends Component {
                                   <footer>
                                     <div class="card-footer-div"> 
                                     <form onSubmit={function handleSubmit(e){e.preventDefault(); e.target.reset();}}>
-                                        <input type="number" onChange={this.handleInputHour.bind(this, item.id)} placeholder="Hours" class="card-footer-item-input"/>
-                                        <input type="number" onChange={this.handleInputMinute.bind(this, item.id)} placeholder="Minutes" class="card-footer-item-input"/>
+                                        <input type="number" onChange={this.handleInputHour.bind(this, item.id)} value={this.state.items.find(x => x.id == item.id).inputHours} placeholder="Hours" class="card-footer-item-input"/>
+                                        <input type="number" onChange={this.handleInputMinute.bind(this, item.id)} value={this.state.items.find(x => x.id == item.id).inputMinutes} placeholder="Minutes" class="card-footer-item-input"/>
                                         <button type="submit" class="card-footer-item-bottom" onClick={() => this.updateUserTaskHours(item.id)}>
                                           Submit Hours
                                         </button>
