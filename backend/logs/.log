@@ -1,0 +1,6 @@
+2020-06-02 01:10:30,258 - INFO - Server initialized for eventlet.
+2020-06-02 01:10:30,578 - WARNING -  * Debugger is active!
+2020-06-02 01:10:30,583 - INFO -  * Debugger PIN: 339-557-141
+2020-06-02 01:11:09,613 - INFO -  * Detected change in 'C:\\Users\\avira\\Desktop\\2020AUT-Software-Engineering-Studio-2B\\backend\\app\\models.py', reloading
+2020-06-02 01:11:10,641 - INFO - Server initialized for eventlet.
+2020-06-02 01:24:29,012 - INFO - Server initialized for eventlet.

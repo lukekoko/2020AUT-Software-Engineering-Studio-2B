@@ -155,4 +155,3 @@ class Done(Base):
 
     def __repr__(self):
         return '<taskName %r>' % (self.taskName)
-
