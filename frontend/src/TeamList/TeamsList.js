@@ -3,13 +3,13 @@ import axios from "axios";
 import { getHeaderToken } from "../Authentication/JwtConfig";
 import { withRouter } from "react-router-dom";
 import Navbar from "../NavBar";
-
+ 
 class TeamsList extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      team: {},
+      team: {}
+
     };
 
     //function to receive teams data
@@ -19,11 +19,13 @@ class TeamsList extends Component {
         this.setState({
           team: res.data,
         });
-        console.log(this.state.team);
+        // console.log(this.state.team);
       });
     // console.log(findLeader(Object.keys(this.state.team[1].users),1));
+   
   }
-
+  
+  
   render() {
     return (
       <div>
@@ -51,7 +53,7 @@ class TeamsList extends Component {
                       <tr >
                         {/* team name  */}
                         <td key={key} onClick={() => {
-                        this.props.history.push({
+                         this.props.history.push({
                           pathname: `/Team`,
                           team: this.state.team[key].users
                         });
