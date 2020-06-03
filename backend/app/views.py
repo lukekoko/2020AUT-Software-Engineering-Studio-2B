@@ -1,6 +1,7 @@
 from app import app, models, schemas, database
 from flask import jsonify, request
 from typing import List
+from collections import namedtuple
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity, jwt_refresh_token_required, create_refresh_token
@@ -54,13 +55,23 @@ def getTeams():
 @app.route('/addTeams', methods=['POST'])
 def addTeam():
     if request.method == 'POST':
-        # get request data; name email password
         if not request.is_json:
             return jsonify({"msg": "Not a proper JSON"}), 400
         name = request.json.get('name')
         leaderId = request.json.get('leaderId')
-        
+        users = request.json.get('users')
+        tasks = request.json.get('tasks')
+
         team = models.Team(name=name, leaderId=leaderId)
+        print(team.users)
+
+        for user in users:
+          userId = user["id"]
+          userToAdd = models.User.query.filter_by(id=userId).first()
+          team.users.append(userToAdd)
+
+        print(team.users)
+
         try:
             database.db_session.add(team)
             database.db_session.commit()
