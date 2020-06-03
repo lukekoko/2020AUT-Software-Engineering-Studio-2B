@@ -16,6 +16,7 @@ const getItems = (tasks) =>
     title: `${k.title}`,
     name: `${k.name}`,
     description: `${k.description}`,
+    assignedIDS: `${k.assignedIDS}`,
     hours: `${k.hours}`,
     minutes: `${k.minutes}`,
     inputHours: "",
@@ -117,13 +118,17 @@ export default class Task extends Component {
 
   updateUserTaskHours(up_taskID) {
     var newItems = this.state.items;
-    var iHours = parseInt(newItems.find(x => x.id == up_taskID).inputHours);
-    var iMinutes = parseInt(newItems.find(x => x.id == up_taskID).inputMinutes);
-    
-    if(isNaN(iHours) == true){
-      iHours = 0; }
-    if(isNaN(iMinutes) == true){
-      iMinutes = 0;}
+    var iHours = parseInt(newItems.find((x) => x.id == up_taskID).inputHours);
+    var iMinutes = parseInt(
+      newItems.find((x) => x.id == up_taskID).inputMinutes
+    );
+
+    if (isNaN(iHours) == true) {
+      iHours = 0;
+    }
+    if (isNaN(iMinutes) == true) {
+      iMinutes = 0;
+    }
 
     axios
       .post("/updateUserTaskHours", {
@@ -139,18 +144,18 @@ export default class Task extends Component {
 
   handleInputHour(taskID, event) {
     var newitems = this.state.items;
-    newitems.find(x => x.id == taskID).inputHours = event.target.value;
-    this.setState({items: newitems});
+    newitems.find((x) => x.id == taskID).inputHours = event.target.value;
+    this.setState({ items: newitems });
     console.log("inputhours");
-    console.log(newitems.find(x => x.id == taskID).inputHours);
+    console.log(newitems.find((x) => x.id == taskID).inputHours);
   }
 
   handleInputMinute(taskID, event) {
     var newitems = this.state.items;
-    newitems.find(x => x.id == taskID).inputMinutes = event.target.value;
-    this.setState({items: newitems});
+    newitems.find((x) => x.id == taskID).inputMinutes = event.target.value;
+    this.setState({ items: newitems });
     console.log("inputminutes");
-    console.log(newitems.find(x => x.id == taskID).inputMinutes);
+    console.log(newitems.find((x) => x.id == taskID).inputMinutes);
   }
 
   displayTasks = () =>
@@ -161,6 +166,9 @@ export default class Task extends Component {
         </header>
         <div class="card-content">
           <div class="content">{task.description}</div>
+        </div>
+        <div class="card-content">
+          <div class="content">{task.assignedIDS}</div>
         </div>
         <footer class="card-footer">
           <a href="#" class="card-footer-item">
@@ -224,6 +232,9 @@ export default class Task extends Component {
                                       {item.description}
                                     </div>
                                     <div class="content">
+                                      {item.assignedIDS}
+                                    </div>
+                                    <div class="content">
                                       Logged Time: {item.hours} hours{" "}
                                       {item.minutes} minutes
                                     </div>
@@ -253,7 +264,11 @@ export default class Task extends Component {
                                             this,
                                             item.id
                                           )}
-                                          value={this.state.items.find(x => x.id == item.id).inputHours}
+                                          value={
+                                            this.state.items.find(
+                                              (x) => x.id == item.id
+                                            ).inputHours
+                                          }
                                           placeholder="Hours"
                                           class="card-footer-item-input"
                                         />
@@ -263,7 +278,11 @@ export default class Task extends Component {
                                             this,
                                             item.id
                                           )}
-                                          value={this.state.items.find(x => x.id == item.id).inputMinutes}
+                                          value={
+                                            this.state.items.find(
+                                              (x) => x.id == item.id
+                                            ).inputMinutes
+                                          }
                                           placeholder="Minutes"
                                           class="card-footer-item-input"
                                         />

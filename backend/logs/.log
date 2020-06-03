@@ -4,3 +4,52 @@
 2020-06-02 01:11:09,613 - INFO -  * Detected change in 'C:\\Users\\avira\\Desktop\\2020AUT-Software-Engineering-Studio-2B\\backend\\app\\models.py', reloading
 2020-06-02 01:11:10,641 - INFO - Server initialized for eventlet.
 2020-06-02 01:24:29,012 - INFO - Server initialized for eventlet.
+2020-06-04 08:18:37,164 - INFO - Server initialized for eventlet.
+2020-06-04 08:18:37,526 - INFO -  * Restarting with stat
+2020-06-04 08:18:38,958 - INFO - Server initialized for eventlet.
+2020-06-04 08:18:39,409 - WARNING -  * Debugger is active!
+2020-06-04 08:18:39,425 - INFO -  * Debugger PIN: 200-409-701
+2020-06-04 08:21:47,892 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet OPEN data {'sid': 'e30dfa8f516144ca9046082b5d7dc0cd', 'upgrades': ['websocket'], 'pingTimeout': 60000, 'pingInterval': 25000}
+2020-06-04 08:21:47,895 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet MESSAGE data 0
+2020-06-04 08:21:48,209 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received request to upgrade to websocket
+2020-06-04 08:21:48,221 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Upgrade to websocket successful
+2020-06-04 08:22:12,905 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:22:12,906 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:22:37,908 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:22:37,909 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:23:02,911 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:23:02,913 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:23:27,918 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:23:27,918 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:23:52,923 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:23:52,925 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:24:18,381 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:24:18,382 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:24:44,382 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:24:44,383 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:25:10,382 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:25:10,383 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:25:36,381 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:25:36,382 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:26:02,381 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:26:02,382 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:26:28,383 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:26:28,384 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:26:54,381 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:26:54,382 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:27:20,381 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:27:20,382 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:27:46,381 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:27:46,381 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:28:11,383 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:28:11,385 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:28:36,388 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:28:36,389 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:29:01,392 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:29:01,393 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:29:26,396 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:29:26,396 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:29:51,401 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:29:51,402 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
+2020-06-04 08:30:16,408 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Received packet PING data None
+2020-06-04 08:30:16,410 - INFO - e30dfa8f516144ca9046082b5d7dc0cd: Sending packet PONG data None
