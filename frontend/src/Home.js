@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
+import TeamList from "././TeamList/TeamList.js";
 import Cookies from "js-cookie";
 import "./Task/Home.scss";
 //import { getHeaderToken } from "../Authentication/JwtConfig";
@@ -157,7 +158,9 @@ export default class Home extends Component {
                 <p>Email: {this.state.user.email}</p>
                 <p>Name: {this.state.user.name}</p>
 
-
+                {/* Jacobs team list */}
+                <TeamList />
+                
                 {this.state.tasks.length == 0 ? (
                   "No Tasks"
                 ) : (
@@ -218,7 +221,6 @@ export default class Home extends Component {
                     </Droppable>
                   </DragDropContext>
                 )}
-
 
               </div>
             </div>

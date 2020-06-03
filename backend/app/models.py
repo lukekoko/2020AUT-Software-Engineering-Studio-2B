@@ -9,8 +9,15 @@ logger = logging.getLogger(__name__)
 userRooms = Table('userRooms', Base.metadata,
     Column('id', Integer, primary_key=True),
     Column('userId', Integer, ForeignKey('users.id')),
-    Column('roomId', Integer, ForeignKey('ChatRooms.id'))
- )
+    Column('roomId', Integer, ForeignKey('ChatRooms.id')))
+
+teamUsers = Table('teamUsers', Base.metadata,
+    Column('teamId', Integer, ForeignKey('teams.id')),
+    Column('userId', Integer, ForeignKey('users.id')))
+
+teamTasks = Table('teamTasks', Base.metadata,
+    Column('teamId', Integer, ForeignKey('teams.id')),
+    Column('taskId', Integer, ForeignKey('tasks.id')))
 
 class User(Base):
     __tablename__ = 'users'
@@ -36,6 +43,21 @@ class User(Base):
 
     def __repr__(self):
         return '<User %r>' % (self.name)
+
+class Team(Base):
+    __tablename__ = 'teams'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), unique=True, nullable=False)
+    leaderId = Column(Integer)
+    users = relationship("User", secondary=teamUsers)
+    tasks = relationship("Tasks", secondary=teamTasks)
+
+    def __init__(self, name=None, leaderId=None):
+        self.name = name
+        self.leaderId = leaderId
+
+    def __repr__(self):
+        return '<Team %r>' % (self.name)
 
 class Timesheet(Base):
     __tablename__ = 'timesheets'
