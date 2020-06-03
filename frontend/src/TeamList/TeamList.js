@@ -16,7 +16,7 @@ export default class Home extends Component {
           teams: res.data,
         });
         console.log(this.state.teams);
-        //this.handlePopulateDatabase();
+        this.handlePopulateDatabase();
       });
 
     this.handlePopulateDatabase = this.handlePopulateDatabase.bind(this);
@@ -25,8 +25,10 @@ export default class Home extends Component {
   handlePopulateDatabase() {
     axios
       .post("/addTeams", {
-        name: 'Team 2',
-        leaderId: 321,
+        name: 'testing team 17',
+        leaderId: 1,
+        users: [{ id: 1, name: "Jacob", email: "newEmail3@gmailc.com", password: "password", userType: 1 },
+        { id: 2, name: "J", email: "newEmail4@J.J", password: "password", userType: 0 }]
       })
       .then(
         (res) => {
