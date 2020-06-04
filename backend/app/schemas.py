@@ -13,6 +13,7 @@ class UserSchema(BaseModel):
 class TeamSchema(BaseModel):
     id: int
     name: str
+    userId: int
     leaderId: int
 
     class Config: 
