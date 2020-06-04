@@ -50,42 +50,21 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   margin: `0 0 ${grid}px 0`,
 
   // change background colour if dragging
-  background: isDragging ? "lightgreen" : "white",
+  background: isDragging ? "#c3effa" : "white",
 
   // styles we need to apply on draggables
   ...draggableStyle,
 });
 
 const getListStyle = (isDraggingOver) => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
+  background: isDraggingOver ? "#ddd1e6" : "#b5a3c2",
   padding: grid,
-  width: 250,
+  width: 350,
 });
 
 export default class Home extends Component {
   state = {
     items: getItems(10),
-<<<<<<< HEAD
-    selected: getItems(5, 10)
-};
-
-/**
- * A semi-generic way to handle multiple lists. Matches
- * the IDs of the droppable container to the names of the
- * source arrays stored in the state.
- */
-id2List = {
-    droppable: 'items',
-    droppable3: 'selected',
-    droppable2: 'selected'
-
-    
-};
-
-getList = id => this.state[this.id2List[id]];
-
-onDragEnd = result => {
-=======
     selected: getItems(5, 10),
   };
 
@@ -102,7 +81,6 @@ onDragEnd = result => {
   getList = (id) => this.state[this.id2List[id]];
 
   onDragEnd = (result) => {
->>>>>>> d930a7cc6c2ae16e6d78d0d7165938e5346a2415
     const { source, destination } = result;
 
     // dropped outside the list
@@ -123,12 +101,7 @@ onDragEnd = result => {
         state = { selected: items };
       }
 
-<<<<<<< HEAD
-        this.setState(state);
-
-=======
       this.setState(state);
->>>>>>> d930a7cc6c2ae16e6d78d0d7165938e5346a2415
     } else {
       const result = move(
         this.getList(source.droppableId),
@@ -149,11 +122,11 @@ onDragEnd = result => {
       <div >
         <Navbar />
         {/* added the background picture */}
-        <div style={{ backgroundImage: `url(${require("./banner.PNG")})` }}>
+        <div style={{ backgroundImage: `url(${require("./gray.jpg")})` }}>
           <section class="hero">
             <div class="hero-body">
               <div>
-                <h1 class="title">Main Board</h1>
+                <h1 class="title" align ="center" text="bold">Welcome to the Main Board :)</h1><br/>
                 {/* <p>Email: {this.state.user.email}</p>
                 <p>Name: {this.state.user.name}</p> */}
 
