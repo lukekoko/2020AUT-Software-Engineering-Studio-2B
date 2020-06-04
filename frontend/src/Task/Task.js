@@ -56,7 +56,11 @@ export default class Task extends Component {
       user: {},
       tasks: [],
       items: [],
+      highColor: "",
+      mediumColor: "",
+      lowColor: "",
     };
+
     this.getCreatedTasks = this.getCreatedTasks.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.handleInputHour = this.handleInputHour.bind(this);
@@ -154,6 +158,24 @@ export default class Task extends Component {
     console.log(newitems.find((x) => x.id == taskID).inputMinutes);
   }
 
+  highClick = (e) => {
+    this.setState({
+      highColor: "blue",
+    });
+  };
+
+  mediumClick = (e) => {
+    this.setState({
+      mediumColor: "#5DADE2",
+    });
+  };
+
+  lowClick = (e) => {
+    this.setState({
+      lowColor: "#D6F1F6",
+    });
+  };
+
   displayTasks = () =>
     this.state.tasks.map((task) => (
       <div class="card" key={task.id}>
@@ -167,15 +189,14 @@ export default class Task extends Component {
           <div class="content">{task.assignedIDS}</div>
         </div>
         <footer class="card-footer">
-          <a href="#" class="card-footer-item" onClick={this.changePriority}>
-            <div> {this.state.on && <h1> Hey</h1>} </div>
-            Priority
+          <a href="#" class="card-footer-item-high">
+            High
           </a>
-          <a href="#" class="card-footer-item">
-            Stage
+          <a href="#" class="card-footer-item-medium">
+            Medium
           </a>
-          <a href="#" class="card-footer-item">
-            Due Date
+          <a href="#" class="card-footer-item-low">
+            Low
           </a>
         </footer>
       </div>
@@ -210,6 +231,7 @@ export default class Task extends Component {
                             >
                               {(provided, snapshot) => (
                                 <div
+                                  id="mainCard"
                                   class="card"
                                   key={item.id}
                                   ref={provided.innerRef}
@@ -242,14 +264,31 @@ export default class Task extends Component {
                                     <a
                                       href="#"
                                       class="card-footer-item"
-                                      onClick={this.priorityColourHandler}
+                                      style={{
+                                        backgroundColor: this.state.highColor,
+                                      }}
+                                      onClick={this.highClick}
                                     >
                                       High
                                     </a>
-                                    <a href="#" class="card-footer-item">
+                                    <a
+                                      href="#"
+                                      class="card-footer-item"
+                                      style={{
+                                        backgroundColor: this.state.mediumColor,
+                                      }}
+                                      onClick={this.mediumClick}
+                                    >
                                       Medium
                                     </a>
-                                    <a href="#" class="card-footer-item">
+                                    <a
+                                      href="#"
+                                      class="card-footer-item"
+                                      style={{
+                                        backgroundColor: this.state.lowColor,
+                                      }}
+                                      onClick={this.lowClick}
+                                    >
                                       Low
                                     </a>
                                   </footer>
