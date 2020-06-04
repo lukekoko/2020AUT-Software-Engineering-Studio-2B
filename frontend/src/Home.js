@@ -4,7 +4,6 @@ import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
 import TeamList from "././TeamList/TeamList.js";
 import Cookies from "js-cookie";
-import TeamList from "./TeamList/TeamList";
 //import baby from "./assets/baby.gif";
 //import relatable from "./assets/relatable.jpg";
 //import fire from "./assets/fire.jpg";
