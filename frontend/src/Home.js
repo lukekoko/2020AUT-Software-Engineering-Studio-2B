@@ -75,6 +75,19 @@ export default class Home extends Component {
     };
   }
 
+  componentDidMount() {
+    axios
+      .get("/protected", { headers: { Authorization: getHeaderToken() } })
+      .then((res) => {
+        this.setState({
+          user: res.data,
+        });
+        Cookies.set("username", res.data['name']);
+        Cookies.set("userid", res.data['id']);
+        // this.getCreatedTasks();
+      });
+  }
+
   /**
    * A semi-generic way to handle multiple lists. Matches
    * the IDs of the droppable container to the names of the
