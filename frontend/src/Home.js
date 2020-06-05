@@ -6,7 +6,6 @@ import Navbar from "./NavBar";
 import TeamList from "./TeamList/TeamsList";
 import Cookies from "js-cookie";
 import "./Task/Home.scss";
-//import { getHeaderToken } from "../Authentication/JwtConfig";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 
