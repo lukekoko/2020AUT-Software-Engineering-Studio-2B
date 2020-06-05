@@ -2,60 +2,65 @@
 @import "../styles/mixins";
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,800");
 
-.navGrad{
-    height: 70px;
-    //background-color: red; 
-    background-image: linear-gradient(to right, rgb(97, 80, 109) , rgb(184, 159, 214), rgb(158, 216, 243) ) !important;
+.navGrad {
+  height: 70px;
+  //background-color: red;
+  background-image: linear-gradient(
+    to right,
+    rgb(97, 80, 109),
+    rgb(184, 159, 214),
+    rgb(158, 216, 243)
+  ) !important;
 }
 
-.navText{
-    color: white;
-    padding: 80px; 
+.navText {
+  color: white;
+  padding: 80px;
 }
 
-.logo{
-    height: 300px;
-    width: 100px;
+.logo {
+  height: 300px;
+  width: 100px;
 }
 
-.button{
-    background-color: rgb(158, 216, 243);
-    font-weight: bolder;
-    color: white; 
+.button {
+  background-color: rgb(158, 216, 243);
+  font-weight: bolder;
+  color: white;
 }
 
-.menu{
-    font-weight: bolder;
-    color: white;
+.menu {
+  font-weight: bolder;
+  color: white;
 }
 
 body .list {
-    position: relative; 
-    width: 250px;
-    margin: 0px auto; 
-    display: block;   
+  position: relative;
+  width: 250px;
+  margin: 0px auto;
+  display: block;
 }
 
-body .list ::-webkit-input-placeholder{
-    color: #ddcaed; 
+body .list ::-webkit-input-placeholder {
+  color: #ddcaed;
 }
 
-body .list .input{
-    outline: none;
-    border: 1px solid white;
-    background-color:#a778cf;
-    color: white;
-    height: 50px;
-    width: 250px;
-    padding-left: 10px;
-    font-family: "Raleway", sans-serif;
-    font-weight: 800;
-    font-size: 16px;
-    margin-left: -5px; 
+body .list .input {
+  outline: none;
+  border: 1px solid white;
+  background-color: #a778cf;
+  color: white;
+  height: 50px;
+  width: 250px;
+  padding-left: 10px;
+  font-family: "Raleway", sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  margin-left: -5px;
 }
 
 body .list span {
-    position: absolute;     
+  position: absolute;
   right: 0;
   top: 0;
   font-size: 30px;
@@ -68,15 +73,15 @@ body .list span {
 }
 
 body .list span:hover {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 body ul {
-    padding: 0px; 
+  padding: 0px;
 }
 
 body ul .draggable {
-    will-change: transform;
+  will-change: transform;
   font-family: "Raleway", sans-serif;
   font-weight: 800;
   height: 50px;
@@ -95,25 +100,26 @@ body ul .draggable {
 }
 
 body ul .draggable:hover:after {
-    opacity: 1; 
-    transform: translate(0);
+  opacity: 1;
+  transform: translate(0);
 }
 
 .over {
-    transform: scale(1.1, 1.1);
+  transform: scale(1.1, 1.1);
 }
 .navbar-item {
-    font-weight: bold;
+  font-weight: bold;
 }
 
-.navbar-item.has-text-white:hover, a.has-text-white:hover  {
+.navbar-item.has-text-white:hover,
+a.has-text-white:hover {
+  color: black !important;
+}
+
+@media (max-width: 1024px) {
+  .has-text-white {
     color: black !important;
-}
-
-@media (max-width: 1024px){
-    .has-text-white {
-        color: black !important;
-    }
+  }
   .navbar-menu {
     position: absolute;
     right: 0;
@@ -125,28 +131,33 @@ body ul .draggable:hover:after {
   }
 
   .desktop-menu {
-      display: none;
+    display: none;
   }
 }
 
-@media (min-width: 1024px){ 
-    .mobile-nav-open {
-        display: none;
-    }
-    .mobile-menu {
-        display: none;
-    }
+@media (min-width: 1024px) {
+  .mobile-nav-open {
+    display: none;
+  }
+  .mobile-menu {
+    display: none;
+  }
 }
 
 .mobile-nav-open button {
-    background-color: black;
-    color: #fff;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 10px;
-    border-radius: 5px;
-    display: inline-block;
-    border: none;
-    transition: all 0.4s ease 0s;
+  background-color: black;
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s;
+}
 
+.center-me {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
 }
