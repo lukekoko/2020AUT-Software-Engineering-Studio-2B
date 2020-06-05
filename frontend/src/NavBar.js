@@ -147,7 +147,15 @@ class NavBar extends Component {
               >
                 Teams List
               </a>
-            <a class="navbar-item has-text-white">Calendar</a>
+
+            <a class="navbar-item has-text-white"
+             onClick={() => {
+              this.props.history.push({
+                pathname: `/calendar`
+              });
+            }}>
+              Calendar
+            </a>
           </div>
           <div class="navbar-end">
             <div class="navbar-item">
@@ -216,7 +224,14 @@ class NavBar extends Component {
               >
                 Chat
               </a>
-              <a class="navbar-item has-text-white">Calendar</a>
+              <a class="navbar-item has-text-white"
+             onClick={() => {
+              this.props.history.push({
+                pathname: `/calendar`
+              });
+            }}>
+              Calendar
+            </a>
             </div>
             <div class="navbar-end">
               <div class="navbar-item">

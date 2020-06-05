@@ -59,7 +59,7 @@ def populate_db():
     user.rooms.append(room)
     database.db_session.add(user)
     team.users.append(user)
-    user = models.User(name="Manager", email="Manager@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=1)
+    user = models.User(name="Manager", email="manager@gmail.com", password="$2b$12$wmAorIYQNm2VYr24pF/9QOz9HwXNoa0rjo8dHZihbxPC19dcid1mG", userType=1)
     user.rooms.append(room)
     database.db_session.add(user)
     team.users.append(user)
