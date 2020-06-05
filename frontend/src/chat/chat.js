@@ -7,7 +7,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Form, Dropdown } from "semantic-ui-react";
 import "./chat.scss";
-import foot from "../assets/foot.jpg";
+import foot from "../assets/index.png";
 
 // http://34.87.237.202:5000 for docker
 var url = "http://localhost:5000";
@@ -28,6 +28,7 @@ class Chat extends Component {
       roomDisplay: "",
       modelActivate: {},
       editingMessage: "",
+      editRoomName: false,
     };
     this.inputChange = this.inputChange.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -43,6 +44,10 @@ class Chat extends Component {
     this.deleteMessage = this.deleteMessage.bind(this);
     this.enableEditInput = this.enableEditInput.bind(this);
     this.editMessageOnChange = this.editMessageOnChange.bind(this);
+    this.deleteRoom = this.deleteRoom.bind(this);
+    this.editRoomName = this.editRoomName.bind(this);
+    this.editRoomNameOnChange = this.editRoomNameOnChange.bind(this);
+    this.dropdownlist = React.createRef();
   }
 
   componentDidMount() {
@@ -74,7 +79,7 @@ class Chat extends Component {
     });
 
     socket.on("message", (data) => {
-      console.log(data);
+      // console.log(data);
     });
 
     socket.on("previousMessage", (data) => {
@@ -92,6 +97,31 @@ class Chat extends Component {
     socket.on("success", (data) => {
       if (parseInt(data["userid"]) == parseInt(this.state.userid)) {
         this.getPreviousMessages();
+      }
+    });
+
+    // this is for deleteing and editing messages
+    socket.on("successMessage", (data) => {
+      if (data["userid"].includes(parseInt(this.state.userid))) {
+        this.getPreviousMessages();
+      }
+    });
+
+    // this is for deleteing and editing + rooms
+    socket.on("successRoom", (data) => {
+      if (data["userid"].includes(parseInt(this.state.userid))) {
+        if (data["method"] === "delete") {
+          socket.emit("leave", {
+            username: this.state.username,
+            userid: this.state.userid,
+            room: this.state.room,
+          });
+          this.setState({ room: "", roomDisplay: "", messages: [] });
+          this.getRooms();  
+        } else {
+          this.setState({editRoomName: false})
+          this.getRooms();  
+        }
       }
     });
 
@@ -129,7 +159,7 @@ class Chat extends Component {
         if (res.data) {
           var data = res.data;
           for (const key of Object.keys(data)) {
-            data[key]["name"] = data[key]["name"]
+            data[key]["roomName"] = data[key]["roomName"]
               .replace(this.state.username + ", ", "")
               .replace(", " + this.state.username, "");
           }
@@ -188,7 +218,6 @@ class Chat extends Component {
   }
 
   deleteMessage(id) {
-    console.log("delete", id);
     axios
       .post(
         "/rooms/messages/delete",
@@ -198,7 +227,6 @@ class Chat extends Component {
         }
       )
       .then((res) => {
-        console.log(res);
       });
   }
 
@@ -219,7 +247,6 @@ class Chat extends Component {
           }
         )
         .then((res) => {
-          console.log(res);
         });
 
       this.enableEditInput(id, false, "none");
@@ -270,6 +297,7 @@ class Chat extends Component {
       .then(
         (res) => {
           this.getRooms();
+          this.setState({selectedUsersForCreatingRoom: []});
         },
         (error) => {
           alert("Room with these users is already created", error);
@@ -296,13 +324,46 @@ class Chat extends Component {
     this.setState({
       room: event.target.value,
       messages: [],
-      roomDisplay: room.name,
+      roomDisplay: room.roomName,
     });
+  }
+
+  deleteRoom() {
+    axios
+      .post(
+        "/rooms/delete",
+        { roomid: this.state.room, userId: this.state.userid },
+        {
+          headers: { Authorization: getHeaderToken() },
+        }
+      )
+      .then((res) => {
+      });
+  }
+
+  editRoomNameOnChange(event) {
+    this.setState({
+      roomDisplay: event.target.value,
+    });
+  }
+
+  editRoomName(event) {
+    axios
+      .post(
+        "/rooms/edit",
+        { roomid: this.state.room, name: this.state.roomDisplay },
+        {
+          headers: { Authorization: getHeaderToken() },
+        }
+      )
+      .then((res) => {
+      });
+    event.preventDefault();
   }
 
   displayMessages = () =>
     this.state.messages.map((item, i) => (
-      <div class="columns is-vcentered is-flex is-centered">
+      <div class="columns is-vcentered is-flex is-centered" key={item.id + item.time}>
         <div class="column is-narrow">
           <figure
             class="image is-64x64"
@@ -407,7 +468,7 @@ class Chat extends Component {
             <Form onSubmit={this.createRoom}>
               <div
                 class="columns is-flex is-centered"
-                style={{ padding: "5px" }}
+                // style={{ padding: "5px" }}
               >
                 <div class="column">
                   <Dropdown
@@ -422,6 +483,8 @@ class Chat extends Component {
                     fluid
                     disabled={this.state.users.length == 0 ? true : false}
                     onChange={this.onSelectChange}
+                    value={this.state.selectedUsersForCreatingRoom}
+                    ref={this.dropdownlist} 
                   ></Dropdown>
                 </div>
                 <div class="column">
@@ -450,24 +513,81 @@ class Chat extends Component {
                   value={item.id}
                   disabled={this.state.room == item.id}
                 >
-                  {item.name}
+                  {item.roomName}
                 </button>
               </div>
             ))}
           </div>
           <div class="column">
             <div class="message-header">
-              <p>{this.state.roomDisplay}</p>
+              {this.state.editRoomName ? (
+                <form
+                  onSubmit={(e) => {
+                    if (window.confirm("Do you want to edit?"))
+                      this.editRoomName(e);
+                  }}
+                  style={{ width: "90%" }}
+                  // onBlur={() => this.enableEditInput(item.id, false, '')}
+                >
+                  <div class="field has-addons">
+                    <p class="control is-expanded">
+                      <input
+                        name={"editMessage" + this.state.roomDisplay}
+                        class="input is-rounded"
+                        type="text"
+                        onChange={this.editRoomNameOnChange}
+                        value={this.state.roomDisplay}
+                        disabled={this.state.room === ""}
+                      />
+                    </p>
+                    <p class="control">
+                      <button class="button is-danger is-rounded" type="submit">
+                        Edit
+                      </button>
+                    </p>
+                  </div>
+                </form>
+              ) : (
+                <p>{this.state.roomDisplay}</p>
+              )}
+              {this.state.roomDisplay !== "" && this.state.room !== "1" && (
+                <div>
+                  <a
+                    class="button is-text is-small"
+                    onClick={() => {
+                      this.setState({ editRoomName: !this.state.editRoomName });
+                    }}
+                  >
+                    <span class="icon has-text-light">
+                      <i class="fas fa-edit"></i>
+                    </span>
+                  </a>
+                  <a
+                    class="button is-text is-small"
+                    onClick={() => {
+                      if (window.confirm("Do you want to Delete?"))
+                        this.deleteRoom();
+                    }}
+                  >
+                    <span class="icon has-text-light">
+                      <i class="fas fa-trash"></i>
+                    </span>
+                  </a>
+                </div>
+              )}
             </div>
             <div
               id="messageDiv"
-              style={{ width: "100%", height: "1000px", overflow: "auto" }}
+              class="message-body"
+              style={{ width: "100%", height: "600px", overflow: "auto" }}
             >
               <div class="message-body" style={{}}>
                 {this.state.room === "" && (
                   <p>Click on the buttons on the right to start a chat</p>
                 )}
-                {this.state.messages.length === 0 && this.state.room !== '' && <span>No Messages</span>}
+                {this.state.messages.length === 0 && this.state.room !== "" && (
+                  <span>No Messages</span>
+                )}
                 {this.displayMessages()}
               </div>
             </div>

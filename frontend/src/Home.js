@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { getHeaderToken } from "./Authentication/JwtConfig";
 import Navbar from "./NavBar";
+import TeamList from "./TeamList/TeamsList";
 import Cookies from "js-cookie";
 import "./Task/Home.scss";
 import "./banner.PNG"
