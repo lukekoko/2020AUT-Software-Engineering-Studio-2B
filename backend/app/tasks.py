@@ -1,6 +1,7 @@
 from app import app, models, schemas, database
 from flask import jsonify, request
 from typing import List
+from flask_mail import Mail, Message
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
@@ -13,6 +14,14 @@ logger = logging.getLogger(__name__)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
+# NB might need to enable less secure on google account to sign in
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 'blankman431234@gmail.com' #test email goes here 
+app.config['MAIL_PASSWORD'] = "evilthreat7" #test password goes here
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+mail = Mail(app)
 
 @app.route('/createTask', methods=['POST'])
 def CreateTask():
@@ -42,6 +51,7 @@ def CreateTask():
                 user.tasks.append(usertasks)
                 database.db_session.add(user)
             database.db_session.commit()  # SA will insert a relationship row
+            sendEmail()
         except:
             return jsonify({"msg": "Cannot create Task"}), 500
         return jsonify({"msg": "Task Created"}), 200
@@ -72,6 +82,17 @@ def getCreatedTasks():
             })
         return jsonify(tasks)
 
+def sendEmail():                                   #this method also breaks CreateTask(). Receive "Create Task Error" when I click "submit" on create task page
+   msg = Message('Hello', sender = 'blankman431234@gmail.com', recipients = ['zainsalimuddin@gmail.com']) 
+   msg.body = "Hello You have new tasks"
+   mail.send(msg)
+   return "Sent"
+
+def sendUpdateHourEmail():                                   #this method also breaks CreateTask(). Receive "Create Task Error" when I click "submit" on create task page
+   msg = Message('Hello', sender = 'blankman431234@gmail.com', recipients = ['zainsalimuddin@gmail.com']) 
+   msg.body = "Hello These are my hours"
+   mail.send(msg)
+   return "Sent"
 
 @app.route("/getAssignedTasks", methods=['POST'])
 def getAssignedTasks():
@@ -160,6 +181,7 @@ def updateUserTaskHours():
                 'hours': hmQuery.hours,
                 'minutes': hmQuery.minutes,
             })
+            sendUpdateHourEmail()
             return jsonify(hm)
         except:
             return jsonify({"msg": "Update User Task Error"}), 500
