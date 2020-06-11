@@ -7,3 +7,5 @@ Flask_SQLAlchemy==2.4.1
 pydantic==1.4
 Flask_Bcrypt==0.7.1
 flask_mail==0.9.1
+email_validator==1.0.5
+eventlet
