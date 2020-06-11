@@ -36,7 +36,7 @@ const myEventsList = [
     end: new Date(2020, 5, 11, 18),
 },
 {
-  id: 0,
+  id: 2,
   title: 'Group meeting',
   start: new Date(2020, 5, 1),
   end: new Date(2020, 5, 1),
